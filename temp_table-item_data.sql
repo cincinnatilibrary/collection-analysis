@@ -145,7 +145,7 @@ AND r.campus_code = ''
 AND r.deletion_date_gmt is NULL
 
 -- TESTING -- only fetch a small sample
-LIMIT 5000
+LIMIT 10000
 ;
 
 

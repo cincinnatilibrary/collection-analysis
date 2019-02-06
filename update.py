@@ -5,6 +5,7 @@ import configparser
 import sqlite3
 import psycopg2
 import psycopg2.extras
+import csv
 import os
 from random import randint
 from datetime import datetime
@@ -162,6 +163,10 @@ class App:
 		cursor = self.sqlite_conn.cursor()
 
 		# insert the bib data
+		bib_csv_file = open('bib_csv_file.csv', 'w')
+		bib_csv_writer = csv.writer(bib_csv_file, delimiter='|', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+		# quoting=csv.QUOTE_MINIMAL
+
 		sql_bib_insert = """
 		INSERT OR REPLACE INTO bib (
 			bib_record_num, --1
@@ -203,8 +208,8 @@ class App:
 		for row in self.gen_sierra_data(query='SELECT * FROM temp_bib_export'):
 			row_counter += 1
 			values = (
-				int(row.bib_record_num),
-				int(row.bib_record_id),
+				row.bib_record_num,
+				row.bib_record_id,
 				row.control_numbers,
 				row.creation_date,
 				row.record_last_updated,
@@ -214,7 +219,7 @@ class App:
 				row.best_title,
 				row.best_title_norm,
 				row.publisher,
-				int(row.publish_year),
+				row.publish_year,
 				row.bib_level_callnumber,
 				row.indexed_subjects
 			)
@@ -222,6 +227,43 @@ class App:
 			cursor.execute(sql_bib_insert, values)
 			# debug
 			# pdb.set_trace()
+				
+			# write to csv file
+			if(row_counter==1):
+				# Write to the header
+				# if we want to output all data to the .csv, the following may be useful
+				# keys = row._asdict().keys()
+				# print('row keys: {}'.format(keys))
+				# MAKE SURE THESE MATCH THE OUTPUT ROWS
+				bib_csv_writer.writerow(
+					(
+						'bib_record_num', 
+						'creation_date',
+						'record_last_updated',
+						'isbn',
+						'best_author',
+						'best_title',
+						'publisher',
+						'publish_year',
+						'bib_level_callnumber',
+						'indexed_subjects'
+					)
+				)
+
+			bib_csv_writer.writerow(
+				(
+					row.bib_record_num, 
+					row.creation_date,
+					row.record_last_updated,
+					row.isbn,
+					row.best_author,
+					row.best_title,
+					row.publisher,
+					row.publish_year,
+					row.bib_level_callnumber,
+					row.indexed_subjects
+				)
+			)
 
 			# commit values to the local database every self.itersize times through
 			if(row_counter % self.itersize == 0):
@@ -232,12 +274,16 @@ class App:
 				# pdb.set_trace()
 				# print(row)
 		self.sqlite_conn.commit()
+		bib_csv_file.close()
 		print("\ndone with bib export")
 		# /insert the bib data
 
 		###
 
 		# insert the item data
+		item_csv_file = open('item_csv_file.csv', 'w')
+		item_csv_writer = csv.writer(item_csv_file, delimiter='|', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+
 		sql_item_insert = """
 		INSERT OR REPLACE INTO item (
 			item_record_id, --1
@@ -296,25 +342,84 @@ class App:
 		row_counter = 0
 		for row in self.gen_sierra_data(query='SELECT * FROM temp_item_export'):
 			row_counter += 1
+
+			if(row_counter==1):
+				# Write to the header
+				# if we want to output all data to the .csv, the following may be useful
+				# keys = row._asdict().keys()
+				# print('row keys: {}'.format(keys))
+				# MAKE SURE THESE MATCH THE OUTPUT ROWS
+				item_csv_writer.writerow(
+					(
+						'item_record_num',
+						'bib_record_num',
+						'creation_date',
+						'record_last_updated',
+						'barcode',
+						'agency_code_num',
+						'location_code',
+						'checkout_statistic_group_code_num',
+						'checkin_statistics_group_code_num',
+						'checkout_date',
+						'due_date',
+						'patron_branch_code',
+						'last_checkout_date',
+						'last_checkin_date',
+						'checkout_total',
+						'renewal_total',
+						'isbn',
+						'item_format',
+						'item_status_code',
+						'price',
+						'item_callnumber'
+					)
+				)
+
+			item_csv_writer.writerow(
+				(
+					row.item_record_num,
+					row.bib_record_num,
+					row.creation_date,
+					row.record_last_updated,
+					row.barcode,
+					row.agency_code_num,
+					row.location_code,
+					row.checkout_statistic_group_code_num,
+					row.checkin_statistics_group_code_num,
+					row.checkout_date,
+					row.due_date,
+					row.patron_branch_code,
+					row.last_checkout_date,
+					row.last_checkin_date,
+					row.checkout_total,
+					row.renewal_total,
+					row.isbn,
+					row.item_format,
+					row.item_status_code,
+					row.price,
+					row.item_callnumber
+				)
+			)
+
 			values = (
-				int(row.item_record_id),
-				int(row.item_record_num),
-				int(row.bib_record_id),
-				int(row.bib_record_num),
+				row.item_record_id,
+				row.item_record_num,
+				row.bib_record_id,
+				row.bib_record_num,
 				row.creation_date,
 				row.record_last_updated,
 				row.barcode,
 				row.agency_code_num,
 				row.location_code,
-				int(row.checkout_statistic_group_code_num),
-				int(row.checkin_statistics_group_code_num),
+				row.checkout_statistic_group_code_num,
+				row.checkin_statistics_group_code_num,
 				row.checkout_date,
 				row.due_date,
 				row.patron_branch_code,
 				row.last_checkout_date,
 				row.last_checkin_date,
-				int(row.checkout_total),
-				int(row.renewal_total),
+				row.checkout_total,
+				row.renewal_total,
 				row.isbn,
 				row.item_format,
 				row.item_status_code,
@@ -335,6 +440,7 @@ class App:
 				# pdb.set_trace()
 				# print(row)
 		self.sqlite_conn.commit()
+		item_csv_file.close()
 		print("\ndone with item export")
 		# /insert the item data
 
