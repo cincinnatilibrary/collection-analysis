@@ -160,7 +160,7 @@ ON
   p.bib_record_id = r.id
 
 -- TESTING -- only fetch a small sample
-LIMIT 10000
+LIMIT 20000
 ;
 
 -- TESTING -- select data from the temp table for output

@@ -8,7 +8,7 @@ import psycopg2.extras
 import csv
 import os
 from random import randint
-from datetime import datetime
+from datetime import datetime, date
 from time import sleep
 
 # debug
@@ -17,9 +17,27 @@ import pdb
 class App:
 
 	def __init__(self):
+
+		self.d = date.today()
 		#~ open the config file, and parse the options into local vars
 		config = configparser.ConfigParser()
 		config.read('config.ini')
+
+		 # get the output path from the config
+		self.output_path = config['misc']['output_path']
+		print('output_path: {}'.format(self.output_path))
+		if not os.path.exists(self.output_path):
+			os.sys.exit('ERROR: output path doesn\'t exist ... exiting')
+
+		# set the filenames for the output csv files
+		self.csv_bib_file_name = os.path.join(
+			self.output_path,
+			self.d.strftime("%Y-%m-%d-plch-bib.csv")
+		)
+		self.csv_item_file_name = os.path.join(
+			self.output_path,
+			self.d.strftime("%Y-%m-%d-plch-item.csv")
+		)
 
 		# the salt used for encoding the bib record id (make sure the salt is the same going forward, or we won't be able to id unique bibs)
 		self.salt = config['misc']['salt']
@@ -29,7 +47,7 @@ class App:
 		self.pgsql_conn = None
 
 		# the local database connection
-		self.local_db_connection_string = config['local_db']['connection_string']
+		self.local_db_connection_string = os.path.join(self.output_path, config['local_db']['connection_string'])
 		self.sqlite_conn = None
 
 		# the number of rows to iterate over
@@ -99,8 +117,7 @@ class App:
 		CREATE TABLE IF NOT EXISTS `item` ( `item_record_id` INTEGER, `item_record_num` INTEGER, `bib_record_id` INTEGER, `bib_record_num` INTEGER, `creation_date` TEXT, `record_last_updated` TEXT, `barcode` TEXT, `agency_code_num` INTEGER, `location_code` TEXT, `checkout_statistic_group_code_num` INTEGER, `checkin_statistics_group_code_num` INTEGER, `checkout_date` TEXT, `due_date` TEXT, `patron_branch_code` TEXT, `last_checkout_date` TEXT, `last_checkin_date` TEXT, `checkout_total` INTEGER, `renewal_total` INTEGER, `isbn` TEXT, `item_format` TEXT, `item_status_code` TEXT, `price` TEXT, `item_callnumber` TEXT, `is_deleted` INTEGER DEFAULT 0, PRIMARY KEY(`item_record_id`) )
 		"""
 		cursor.execute(sql)
-
-						
+		
 		self.sqlite_conn.commit()		
 		cursor.close()
 		cursor = None
@@ -163,7 +180,7 @@ class App:
 		cursor = self.sqlite_conn.cursor()
 
 		# insert the bib data
-		bib_csv_file = open('bib_csv_file.csv', 'w')
+		bib_csv_file = open(self.csv_bib_file_name, 'w')
 		bib_csv_writer = csv.writer(bib_csv_file, delimiter='|', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
 		# quoting=csv.QUOTE_MINIMAL
 
@@ -281,7 +298,7 @@ class App:
 		###
 
 		# insert the item data
-		item_csv_file = open('item_csv_file.csv', 'w')
+		item_csv_file = open(self.csv_item_file_name, 'w')
 		item_csv_writer = csv.writer(item_csv_file, delimiter='|', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
 
 		sql_item_insert = """
@@ -434,7 +451,7 @@ class App:
 			# commit values to the local database every self.itersize times through
 			if(row_counter % self.itersize == 0):
 				self.sqlite_conn.commit()
-				print('.',end='')
+				print('.', end='', flush=True)
 				# self.sqlite_conn.commit()
 				# debug
 				# pdb.set_trace()
