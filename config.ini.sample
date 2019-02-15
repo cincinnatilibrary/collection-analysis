@@ -8,3 +8,8 @@
 [misc]
 	salt = 'some_random_number_here'
 	output_path = ./
+
+[ftp]
+	ftp_host = ftp.collectionhq.com
+	ftp_username = USERNAME
+	ftp_password = PASSWORD

@@ -9,10 +9,10 @@ import csv
 import os
 from random import randint
 from datetime import datetime, date
-from time import sleep
+import ftplib
 
 # debug
-import pdb
+# import pdb
 
 class App:
 
@@ -43,6 +43,11 @@ class App:
 			self.d.strftime("%Y-%m-%d-plch-hold-snapshot.csv")
 		)
 
+		# get the FTP info from the config
+		self.ftp_host = config['ftp']['ftp_host']
+		self.ftp_username = config['ftp']['ftp_username']
+		self.ftp_password = config['ftp']['ftp_password']
+
 		# the salt used for encoding the bib record id (make sure the salt is the same going forward, or we won't be able to id unique bibs)
 		self.salt = config['misc']['salt']
 
@@ -68,6 +73,34 @@ class App:
 
 		# fill the local database
 		self.fill_local_db()
+
+		# FTP the output
+		self.ftp_session = ftplib.FTP(
+			host=self.ftp_host, user=self.ftp_username, passwd=self.ftp_password, timeout=600
+		)
+
+		# upload bib
+		print('uploading bib file: {}...'.format(self.csv_bib_file_name))
+		file = open(self.csv_bib_file_name, 'rb')
+		self.ftp_session.storbinary('STOR ' + self.csv_bib_file_name, file)
+		print('done. file size on FTP: {}'.format(self.ftp_session.size(self.csv_bib_file_name)))
+		file.close()
+
+		# upload item
+		print('uploading item file: {}...'.format(self.csv_item_file_name))
+		file = open(self.csv_item_file_name, 'rb')
+		self.ftp_session.storbinary('STOR ' + self.csv_item_file_name, file)
+		print('done. file size on FTP: {}'.format(self.ftp_session.size(self.csv_item_file_name)))
+		file.close()
+
+		# upload hold
+		print('uploading hold file: {}...'.format(self.csv_hold_file_name))
+		file = open(self.csv_hold_file_name, 'rb')
+		self.ftp_session.storbinary('STOR ' + self.csv_hold_file_name, file)
+		print('done. file size on FTP: {}'.format(self.ftp_session.size(self.csv_hold_file_name)))
+		file.close()
+
+		self.ftp_session.quit()
 
 
 	#~ the destructor
