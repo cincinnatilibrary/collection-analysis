@@ -82,21 +82,21 @@ class App:
 		# upload bib
 		print('uploading bib file: {}...'.format(self.csv_bib_file_name))
 		file = open(self.csv_bib_file_name, 'rb')
-		self.ftp_session.storbinary('STOR ' + self.csv_bib_file_name, file)
+		self.ftp_session.storbinary('STOR /' + self.csv_bib_file_name, file)
 		print('done. file size on FTP: {}'.format(self.ftp_session.size(self.csv_bib_file_name)))
 		file.close()
 
 		# upload item
 		print('uploading item file: {}...'.format(self.csv_item_file_name))
 		file = open(self.csv_item_file_name, 'rb')
-		self.ftp_session.storbinary('STOR ' + self.csv_item_file_name, file)
+		self.ftp_session.storbinary('STOR /' + self.csv_item_file_name, file)
 		print('done. file size on FTP: {}'.format(self.ftp_session.size(self.csv_item_file_name)))
 		file.close()
 
 		# upload hold
 		print('uploading hold file: {}...'.format(self.csv_hold_file_name))
 		file = open(self.csv_hold_file_name, 'rb')
-		self.ftp_session.storbinary('STOR ' + self.csv_hold_file_name, file)
+		self.ftp_session.storbinary('STOR /' + self.csv_hold_file_name, file)
 		print('done. file size on FTP: {}'.format(self.ftp_session.size(self.csv_hold_file_name)))
 		file.close()
 
