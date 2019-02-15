@@ -84,7 +84,7 @@ class App:
 		file = open(self.csv_bib_file_name, 'rb')
 		file_basename = os.path.basename(self.csv_bib_file_name)
 		self.ftp_session.storbinary('STOR /' + file_basename, file)
-		print('done. file size on FTP: {}'.format(self.ftp_session.size(self.csv_bib_file_name)))
+		print('done. file size on FTP: {}'.format(self.ftp_session.size('/' + file_basename)))
 		file.close()
 
 		# upload item
@@ -92,7 +92,7 @@ class App:
 		file = open(self.csv_item_file_name, 'rb')
 		file_basename = os.path.basename(self.csv_item_file_name)
 		self.ftp_session.storbinary('STOR /' + file_basename, file)
-		print('done. file size on FTP: {}'.format(self.ftp_session.size(self.csv_item_file_name)))
+		print('done. file size on FTP: {}'.format(self.ftp_session.size('/' + file_basename)))
 		file.close()
 
 		# upload hold
@@ -100,7 +100,7 @@ class App:
 		file = open(self.csv_hold_file_name, 'rb')
 		file_basename = os.path.basename(self.csv_hold_file_name)
 		self.ftp_session.storbinary('STOR /' + file_basename, file)
-		print('done. file size on FTP: {}'.format(self.ftp_session.size(self.csv_hold_file_name)))
+		print('done. file size on FTP: {}'.format(self.ftp_session.size('/' + file_basename)))
 		file.close()
 
 		self.ftp_session.quit()
