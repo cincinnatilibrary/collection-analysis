@@ -2,7 +2,7 @@
 ;
 
 
-CREATE TEMP TABLE temp_holds AS
+CREATE TEMP TABLE temp_holds_data AS
 SELECT
 h.patron_record_id,
 pr.record_num as patron_record_num,
@@ -85,10 +85,12 @@ r.record_type_code = 'b' -- only concerned with bib-level holds now
 ;
 
 
-CREATE INDEX bib_temp_holds ON temp_holds(bib_record_id)
+CREATE INDEX bib_temp_holds ON temp_holds_data(bib_record_id)
 ;
 
 
+DROP TABLE IF EXISTS temp_holds;
+CREATE TEMP TABLE temp_holds AS
 SELECT
 t.bib_record_id,
 t.record_num as bib_record_num,
@@ -97,7 +99,7 @@ t.record_num as bib_record_num,
 	string_agg(th.hold_string, ';' ORDER BY placed_gmt)
 
 	FROM
-	temp_holds as th
+	temp_holds_data as th
 
 	WHERE
 	t.bib_record_id = th.bib_record_id
@@ -107,59 +109,9 @@ t.record_num as bib_record_num,
 ) as holds
 
 FROM
-temp_holds as t
+temp_holds_data as t
 
 GROUP BY
 t.bib_record_id,
 t.record_num
 ;
-
-
-
-
-----
--- TESTING / UNUSED
-----
-
--- DROP TABLE IF EXISTS temp_bibs
--- ;
-
-
--- CREATE TEMP TABLE temp_bib as
--- SELECT
--- t.bib_record_id,
--- COUNT(*) as count
--- 
--- FROM
--- temp_holds as t
--- 
--- GROUP BY
--- t.bib_record_id
--- ;
-
-
--- WITH hold_bibs AS (
--- 	SELECT
--- 	t.bib_record_id
--- 
--- 	FROM
--- 	temp_holds as t
--- 
--- 	GROUP BY
--- 	t.bib_record_id
--- )
--- 
--- SELECT
--- t.bib_record_id,
--- string_agg(t.patron_record_id::TEXT, ';') AS hold_info
--- 
--- FROM
--- hold_bibs as h
--- 
--- JOIN
--- temp_holds as t
--- ON
---   t.bib_record_id = h.bib_record_id
--- 
--- GROUP BY
--- t.bib_record_id

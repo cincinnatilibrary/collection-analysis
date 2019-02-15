@@ -38,6 +38,10 @@ class App:
 			self.output_path,
 			self.d.strftime("%Y-%m-%d-plch-item.csv")
 		)
+		self.csv_hold_file_name = os.path.join(
+			self.output_path,
+			self.d.strftime("%Y-%m-%d-plch-hold-snapshot.csv")
+		)
 
 		# the salt used for encoding the bib record id (make sure the salt is the same going forward, or we won't be able to id unique bibs)
 		self.salt = config['misc']['salt']
@@ -127,14 +131,19 @@ class App:
 		# open the sqlfile
 		sql_string_bib_data = open('temp_table-bib_data.sql', mode='r', encoding='utf-8-sig').read()
 		sql_string_item_data = open('temp_table-item_data.sql', mode='r', encoding='utf-8-sig').read()
+		sql_string_hold_data = open('temp_table-hold_data.sql', mode='r', encoding='utf-8-sig').read()
 
 		with self.pgsql_conn as conn:
 			with conn.cursor() as cursor:
+				# bib
 				print('creating temp bib data table ...')
 				cursor.execute(sql_string_bib_data)
-				# sleep(3)
+				# item
 				print('creating temp item data table ...')
 				cursor.execute(sql_string_item_data)
+				# hold
+				print('creating temp hold data table ...')
+				cursor.execute(sql_string_hold_data)
 				print('done creating temp data tables.')
 
 		cursor = None
@@ -221,6 +230,7 @@ class App:
 		);
 		"""
 
+		print('start bib export')
 		row_counter = 0
 		for row in self.gen_sierra_data(query='SELECT * FROM temp_bib_export'):
 			row_counter += 1
@@ -357,40 +367,40 @@ class App:
 		"""
 
 		row_counter = 0
+		# Write to the header
+		# if we want to output all data to the .csv, the following may be useful
+		# keys = row._asdict().keys()
+		# print('row keys: {}'.format(keys))
+		# MAKE SURE THESE MATCH THE OUTPUT ROWS
+		item_csv_writer.writerow(
+			(
+				'item_record_num',
+				'bib_record_num',
+				'creation_date',
+				'record_last_updated',
+				'barcode',
+				'agency_code_num',
+				'location_code',
+				'checkout_statistic_group_code_num',
+				'checkin_statistics_group_code_num',
+				'checkout_date',
+				'due_date',
+				'patron_branch_code',
+				'last_checkout_date',
+				'last_checkin_date',
+				'checkout_total',
+				'renewal_total',
+				'isbn',
+				'item_format',
+				'item_status_code',
+				'price',
+				'item_callnumber'
+			)
+		)
+
+		print('start item export')
 		for row in self.gen_sierra_data(query='SELECT * FROM temp_item_export'):
 			row_counter += 1
-
-			if(row_counter==1):
-				# Write to the header
-				# if we want to output all data to the .csv, the following may be useful
-				# keys = row._asdict().keys()
-				# print('row keys: {}'.format(keys))
-				# MAKE SURE THESE MATCH THE OUTPUT ROWS
-				item_csv_writer.writerow(
-					(
-						'item_record_num',
-						'bib_record_num',
-						'creation_date',
-						'record_last_updated',
-						'barcode',
-						'agency_code_num',
-						'location_code',
-						'checkout_statistic_group_code_num',
-						'checkin_statistics_group_code_num',
-						'checkout_date',
-						'due_date',
-						'patron_branch_code',
-						'last_checkout_date',
-						'last_checkin_date',
-						'checkout_total',
-						'renewal_total',
-						'isbn',
-						'item_format',
-						'item_status_code',
-						'price',
-						'item_callnumber'
-					)
-				)
 
 			item_csv_writer.writerow(
 				(
@@ -460,6 +470,36 @@ class App:
 		item_csv_file.close()
 		print("\ndone with item export")
 		# /insert the item data
+
+		#
+		# insert the hold data
+		hold_csv_file = open(self.csv_hold_file_name , 'w')
+		hold_csv_writer = csv.writer(hold_csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+
+		row_counter = 0
+		# write to the header ...
+		hold_csv_writer.writerow(
+			(
+				'bib_record_num',
+				'holds'
+			)
+		)
+
+		print('start hold export')
+		for row in self.gen_sierra_data(query='SELECT bib_record_num, holds FROM temp_holds'):
+			row_counter += 1
+			hold_csv_writer.writerow(
+				(
+					row.bib_record_num,
+					row.holds
+				)
+			)
+
+			if(row_counter % self.itersize == 0):
+				print('.',end='')
+
+		hold_csv_file.close()
+		print("\ndone with hold export")
 
 
 #~ run the app!
