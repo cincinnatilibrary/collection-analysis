@@ -1,0 +1,10 @@
+[db]
+	connection_string = dbname='iii' user='USERNAME' host='sierra-db.plch.net' password='PASSWORD' port=1032 sslmode='require'
+	itersize = 5000
+
+[local_db]
+	connection_string = collection_analysis.db
+
+[misc]
+	salt = 'some_random_number_here'
+	output_path = ./
