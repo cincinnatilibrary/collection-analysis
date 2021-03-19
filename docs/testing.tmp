@@ -1,0 +1,19 @@
+testing 
+
+.. table:: ``bib`` record table
+   :widths: auto
+
+   ==================== ===========================================================================================================================
+   column name          description 
+   ==================== ===========================================================================================================================
+   bib_record_num       distinct record id for the resource
+	creation_date        ISO 8601 formatted date (YYYY-MM-DD) that the resource was created in the CHPL catalog system
+	record_last_updated  ISO 8601 formatted date (YYYY-MM-DD) that the resource was last changed
+	isbn                 International Standard Book Number (if available) associated with the resource 
+	best_author          The primary author (if available) associated with the resource
+	best_title           The primary title associated with the resource
+	publisher            Company or person associated with publishing the resource  
+	publish_year         The year of publication associated with the resource
+	bib_level_callnumber The library classification call number associated with the resource (this may be different than the item-level call number)
+	indexed_subjects     Subject headings, subject terms, index terms, or descriptors associated with the resource
+   ==================== ===========================================================================================================================

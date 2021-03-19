@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Database Tables, Columns, and Definitions &mdash; collection-analysis  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Examples and Uses" href="examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples and Uses</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Database Tables, Columns, and Definitions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bib-table"><code class="docutils literal notranslate"><span class="pre">bib</span></code> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#item-table"><code class="docutils literal notranslate"><span class="pre">item</span></code> Table</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">collection-analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Database Tables, Columns, and Definitions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/database_tables.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+      
+        <a href="examples.html" class="btn btn-neutral float-left" title="Examples and Uses" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="database-tables-columns-and-definitions">
+<h1>Database Tables, Columns, and Definitions<a class="headerlink" href="#database-tables-columns-and-definitions" title="Permalink to this headline">¶</a></h1>
+<p>The following are tables contained in each of the database snapshots</p>
+<div class="section" id="bib-table">
+<h2><code class="docutils literal notranslate"><span class="pre">bib</span></code> Table<a class="headerlink" href="#bib-table" title="Permalink to this headline">¶</a></h2>
+<p>Data in the <code class="docutils literal notranslate"><span class="pre">bib</span></code> table provides information about a resource’s metadata as described below:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 78%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>column name</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>bib_record_num</p></td>
+<td><p>distinct record id for the resource</p></td>
+</tr>
+<tr class="row-odd"><td><p>creation_date</p></td>
+<td><p>ISO 8601 formatted date (YYYY-MM-DD) that the resource</p>
+<p>was created in the CHPL catalog system</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>record_last_updated</p></td>
+<td><p>ISO 8601 formatted date (YYYY-MM-DD) that the resource was last changed</p></td>
+</tr>
+<tr class="row-odd"><td><p>isbn</p></td>
+<td><p>International Standard Book Number (if available)
+associated with the resource</p></td>
+</tr>
+<tr class="row-even"><td><p>best_author</p></td>
+<td><p>The primary author (if available) associated with the resource</p></td>
+</tr>
+<tr class="row-odd"><td><p>best_title</p></td>
+<td><p>The primary title associated with the resource</p></td>
+</tr>
+<tr class="row-even"><td><p>publisher</p></td>
+<td><p>Company or person associated with publishing the resource</p></td>
+</tr>
+<tr class="row-odd"><td><p>publish_year</p></td>
+<td><p>The year of publication associated with the resource</p></td>
+</tr>
+<tr class="row-even"><td><p>bib_level_callnumber</p></td>
+<td><p>The library classification call number associated with the</p>
+<p>resource (this may be different than the item call number)</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>indexed_subjects</p></td>
+<td><p>Subject headings, subject terms, index terms, or descriptors associated</p>
+<p>with the resource</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection/bib">Browse the current_collection bib table</a></p>
+</div>
+<div class="section" id="item-table">
+<h2><code class="docutils literal notranslate"><span class="pre">item</span></code> Table<a class="headerlink" href="#item-table" title="Permalink to this headline">¶</a></h2>
+<p>Data in the <code class="docutils literal notranslate"><span class="pre">item</span></code> table provides information about a resource’s metadata as described below:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 66%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>column name</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>item_record_num</p></td>
+<td><p>Distinct record id for the resource</p></td>
+</tr>
+<tr class="row-odd"><td><p>bib_record_num</p></td>
+<td><p>Record id linking the item to the bib record</p></td>
+</tr>
+<tr class="row-even"><td><p>creation_date</p></td>
+<td><p>ISO 8601 formatted date (YYYY-MM-DD) that the resource</p>
+<p>was created in the CHPL catalog system</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>record_last_updated</p></td>
+<td><p>ISO 8601 formatted date (YYYY-MM-DD) that the resource</p>
+<p>was last changed</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>barcode</p></td>
+<td><p>Machine-readable ID that is affixed or kept with the</p>
+<p>physical material</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>agency_code_num</p></td>
+<td><p>Owning / original agency associated with the item</p></td>
+</tr>
+<tr class="row-even"><td><p>location_code</p></td>
+<td><p>Physical location of the item</p></td>
+</tr>
+<tr class="row-odd"><td><p>checkout_statistic_group_code_num</p></td>
+<td><p>Last assigned statistical code–assigned by a specific terminal /</p>
+<p>location at the last checkout transaction</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>checkin_statistics_group_code_num</p></td>
+<td><p>Last assigned statistical code–assigned by a specific terminal /</p>
+<p>location at the last check in transaction</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>checkout_date</p></td>
+<td><p>If the item was checked out at the time of the snapshot, this</p>
+<p>value will represent the ISO 8601 formatted (YYYY-MM-DD)</p>
+<p>check out date</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>due_date</p></td>
+<td><p>If the item was checked out at the time of the snapshot, this</p>
+<p>value will represent the ISO 8601 formatted (YYYY-MM-DD)</p>
+<p>due date of the item, otherwise the value is NULL</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>patron_branch_code</p></td>
+<td><p>If the item was checked out at the time of the snapshot, this</p>
+<p>value will represent the “home library” code for the patron,</p>
+<p>otherwise the value is NULL</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>last_checkout_date</p></td>
+<td><p>ISO 8601 formatted date (YYYY-MM-DD) that the resource</p>
+<p>was last checked out (if the item is currently checked out,</p>
+<p>this will represent the previous checkout date)</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>last_checkin_date</p></td>
+<td><p>ISO 8601 formatted date (YYYY-MM-DD) that the resource</p>
+<p>was last checked in</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>checkout_total</p></td>
+<td><p>Total count of check out transactions associated with the item</p></td>
+</tr>
+<tr class="row-odd"><td><p>renewal_total</p></td>
+<td><p>Total count of renewal transactions associated with the item</p></td>
+</tr>
+<tr class="row-even"><td><p>isbn</p></td>
+<td><p>International Standard Book Number (if available) associated</p>
+<p>with the resource</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>item_format</p></td>
+<td><p>Controlled-vocabulary description of the type of item</p></td>
+</tr>
+<tr class="row-even"><td><p>item_status_code</p></td>
+<td><p>Code representing a controlled-vocabulary description of the</p>
+<p>status of the item</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>price_cents</p></td>
+<td><p>Assigned value of the item in USD (represented as an integer</p>
+<p>value in cents)</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>item_callnumber</p></td>
+<td><p>The library classification call number associated with the</p>
+<p>resource</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection/item">Browse the current_collection item table</a></p>
+<p><strong>TODO</strong>: Add other tables</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="examples.html" class="btn btn-neutral float-left" title="Examples and Uses" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Cincinnati &amp; Hamilton County Public Library.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

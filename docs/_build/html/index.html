@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>collection-analysis documentation &amp; resources &mdash; collection-analysis  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Static SQL Queries" href="static_queries.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="#">
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="static_queries.html">Static SQL Queries</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples and Uses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="database_tables.html">Database Tables, Columns, and Definitions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">collection-analysis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>collection-analysis documentation &amp; resources</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="static_queries.html" class="btn btn-neutral float-right" title="Static SQL Queries" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+      
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="collection-analysis-documentation-resources">
+<h1>collection-analysis documentation &amp; resources<a class="headerlink" href="#collection-analysis-documentation-resources" title="Permalink to this headline">¶</a></h1>
+<p><strong>NOTE: This document and tool is very much a work in progress. Data in the various databases provided, and information found in this documentation is subject to change.</strong></p>
+<p>The interface and included data can be found here:</p>
+<p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/">https://ilsweb.cincinnatilibrary.org/collection-analysis/</a></p>
+<p>This resource is provided to document the snapshot process for the Cincinnati &amp;
+Hamilton County Public Library (CHPL) “current_collection” data set and to
+provide other report resources related to the “collection-analysis” data set
+that is linked above.</p>
+<div class="section" id="using-the-data-set">
+<h2>Using the Data Set<a class="headerlink" href="#using-the-data-set" title="Permalink to this headline">¶</a></h2>
+<p>The software used to power this data set is called “Datasette”
+(<a class="reference external" href="https://datasette.io/">https://datasette.io/</a>) and is currently written and maintained by Simon
+Willison. Datasette documentation can be found here:
+<a class="reference external" href="https://docs.datasette.io/en/latest/">https://docs.datasette.io/en/latest/</a></p>
+<p>To explore the data, it’s possible to use this tool to run SQL queries directly on the tables in each of the databases to explore
+various states of the CHPL physical collection.</p>
+<p>For example:
+To find the number of total titles that have at least a single item associated with that title, you can use the following query.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">select</span>
+   <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">b</span><span class="p">.</span><span class="n">bib_record_num</span><span class="p">)</span>
+<span class="k">from</span>
+   <span class="n">bib</span> <span class="k">as</span> <span class="n">b</span>
+   <span class="k">join</span> <span class="n">item</span> <span class="k">as</span> <span class="n">i</span> <span class="k">on</span> <span class="n">i</span><span class="p">.</span><span class="n">bib_record_num</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="n">bib_record_num</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection?sql=select%0D%0A++count%28distinct+b.bib_record_num%29%0D%0Afrom%0D%0A++bib+as+b%0D%0A++join+item+as+i+on+i.bib_record_num+%3D+b.bib_record_num">Click to Run this query on the “current_collection” snapshot database</a></p>
+<p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/collection-2021-01-04-6a32a78?sql=select%0D%0A++count%28distinct+b.bib_record_num%29%0D%0Afrom%0D%0A++bib+as+b%0D%0A++join+item+as+i+on+i.bib_record_num+%3D+b.bib_record_num">Click to Run this query on the “collection-2021-01-04” snapshot database</a></p>
+<p>Below are static SQL queries for reports and analysis</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="static_queries.html">Static SQL Queries</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#bib-records-deleted-within-the-last-week">Bib Records Deleted Within the Last Week</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#item-records-deleted-within-the-last-week">Item Records Deleted Within the Last Week</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>More examples and use general use cases can be found below.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples and Uses</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="what-is-included-in-the-data-set">
+<h2>What is Included in the Data Set?<a class="headerlink" href="#what-is-included-in-the-data-set" title="Permalink to this headline">¶</a></h2>
+<p>Snapshots of the CHPL physical collection’s metadata is done weekly</p>
+<p>There are 3 “levels” of collection metadata snapshots provided as distinct databases:</p>
+<ol class="arabic simple">
+<li><p><strong>current_collection</strong>: Most-current snapshot of the metadata.</p></li>
+<li><p><strong>collection_prev</strong>: Previous snapshot</p></li>
+<li><p><strong>collection-YYYY-MM-DD</strong>: Start-of-year snapshot. (<em>e.g., collection-2021-01-04 would represent the state of the collection from the first Monday of 2021</em>)</p></li>
+</ol>
+<p>There are two primary tables in each data snapshot (additional tables are also included to supplement these tables which can be found in the links below):</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bib</span></code>: <a class="reference external" href="https://en.wikipedia.org/wiki/Bibliographic_record">Bibliographic</a> metadata associated with a resource</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">item</span></code>: Item-level metadata (such as item location, barcode, etc.)</p></li>
+</ol>
+<p>More detail about what is included in each of the database snapshots can be found below.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="database_tables.html">Database Tables, Columns, and Definitions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#bib-table"><code class="docutils literal notranslate"><span class="pre">bib</span></code> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#item-table"><code class="docutils literal notranslate"><span class="pre">item</span></code> Table</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="uh-ok-but-like-why">
+<h2>Uh, OK. But, Like …Why?<a class="headerlink" href="#uh-ok-but-like-why" title="Permalink to this headline">¶</a></h2>
+<p>Data is amazing! The ability to examine, aggregate, and transform data can
+give incredible and powerful insights into the large physical collection that
+CHPL maintains for the public.</p>
+<p>Reports, search tools and other really interesting and useful things can be generated from this data</p>
+<p>For Example This:</p>
+<p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-98fefc7/top_circulating_by_subject?subject=dystopias&amp;_hide_sql=1">Top Circulating Titles With Subject Heading ‘dystopias’ in the CHPL Current Collection</a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="static_queries.html" class="btn btn-neutral float-right" title="Static SQL Queries" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Cincinnati &amp; Hamilton County Public Library.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
