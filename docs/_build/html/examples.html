@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Database Tables, Columns, and Definitions" href="database_tables.html" />
-    <link rel="prev" title="collection-analysis documentation &amp; resources" href="index.html" /> 
+    <link rel="prev" title="Static SQL Queries" href="static_queries.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,8 +87,12 @@
               
             
             
-              <ul class="current">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="static_queries.html">Static SQL Queries</a></li>
+</ul>
+<ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples and Uses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bib-and-item-tables"><code class="docutils literal notranslate"><span class="pre">bib</span></code> and <code class="docutils literal notranslate"><span class="pre">item</span></code> Tables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aggregate-counts">Aggregate Counts</a></li>
 </ul>
 </li>
@@ -162,7 +166,7 @@
         <a href="database_tables.html" class="btn btn-neutral float-right" title="Database Tables, Columns, and Definitions" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="collection-analysis documentation &amp; resources" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="static_queries.html" class="btn btn-neutral float-left" title="Static SQL Queries" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
       
   </div>
   
@@ -175,6 +179,317 @@
 <h1>Examples and Uses<a class="headerlink" href="#examples-and-uses" title="Permalink to this headline">¶</a></h1>
 <p>There are many use-cases for these data sets–some examples can be found below.</p>
 <p><strong>TODO</strong> add many use-cases</p>
+<div class="section" id="bib-and-item-tables">
+<h2><code class="docutils literal notranslate"><span class="pre">bib</span></code> and <code class="docutils literal notranslate"><span class="pre">item</span></code> Tables<a class="headerlink" href="#bib-and-item-tables" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">bib</span></code> and <code class="docutils literal notranslate"><span class="pre">item</span></code> tables are the two primary tables, that when combined, give a
+more complete picture of the CHPL physical collection.</p>
+<p>For example, the below query will produce a simples shelf list for a given
+location (<code class="docutils literal notranslate"><span class="pre">1cjbd</span></code> is the Main - 1st Floor - Children’s Library - Board Books location):</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">select</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_record_num</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">bib_record_num</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">location_code</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_format</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_callnumber</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">barcode</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_status_code</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">checkout_total</span>
+<span class="k">from</span>
+  <span class="n">item</span>
+<span class="k">where</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">location_code</span> <span class="o">=</span> <span class="s1">&#39;1cjbd&#39;</span>
+<span class="k">order</span> <span class="k">by</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">location_code</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_format</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_callnumber</span>
+<span class="k">limit</span>
+  <span class="mi">10</span>
+</pre></div>
+</div>
+<p>… produces the following output:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 12%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 18%" />
+<col style="width: 11%" />
+<col style="width: 13%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>item_record_num</p></th>
+<th class="head"><p>bib_record_num</p></th>
+<th class="head"><p>location_code</p></th>
+<th class="head"><p>item_format</p></th>
+<th class="head"><p>item_callnumber</p></th>
+<th class="head"><p>barcode</p></th>
+<th class="head"><p>item_status_code</p></th>
+<th class="head"><p>checkout_total</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>10888518</p></td>
+<td><p>3550528</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Book</p></td>
+<td><p>easy</p></td>
+<td><p>A000070519154</p></td>
+<td><p>-</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>10965112</p></td>
+<td><p>3233617</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td></td>
+<td><p>A000070640273</p></td>
+<td><p>-</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>11017035</p></td>
+<td><p>3236372</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td></td>
+<td><p>A000069475681</p></td>
+<td><p>-</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>10965362</p></td>
+<td><p>2688799</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td></td>
+<td><p>A000069006551</p></td>
+<td><p>m</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>9447427</p></td>
+<td><p>3286714</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>204.32 v573      2017</p></td>
+<td><p>A000055734628</p></td>
+<td><p>-</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>2246684</p></td>
+<td><p>1692412</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>591.981102 qd221</p></td>
+<td><p>0987553048016</p></td>
+<td><p>-</p></td>
+<td><p>25</p></td>
+</tr>
+<tr class="row-even"><td><p>11055933</p></td>
+<td><p>3578761</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>973.099 g795      2021</p></td>
+<td><p>A000065991095</p></td>
+<td><p>-</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>8684222</p></td>
+<td><p>3116516</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy</p></td>
+<td><p>A000049629173</p></td>
+<td><p>!</p></td>
+<td><p>17</p></td>
+</tr>
+<tr class="row-even"><td><p>8110672</p></td>
+<td><p>3015738</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy</p></td>
+<td><p>A000043824309</p></td>
+<td><p>!</p></td>
+<td><p>17</p></td>
+</tr>
+<tr class="row-odd"><td><p>7037916</p></td>
+<td><p>2828323</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy</p></td>
+<td><p>A000037885829</p></td>
+<td><p>!</p></td>
+<td><p>15</p></td>
+</tr>
+</tbody>
+</table>
+<p>If we wanted to include the bibliographic record data along with the item data, we would perform a <code class="docutils literal notranslate"><span class="pre">JOIN</span></code> on the <code class="docutils literal notranslate"><span class="pre">bib</span></code> table</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">select</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_record_num</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">bib_record_num</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">location_code</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_format</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_callnumber</span><span class="p">,</span>
+  <span class="n">bib</span><span class="p">.</span><span class="n">best_author</span><span class="p">,</span>
+  <span class="n">bib</span><span class="p">.</span><span class="n">best_title</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">barcode</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_status_code</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">checkout_total</span>
+<span class="k">from</span>
+  <span class="n">item</span>
+  <span class="k">join</span> <span class="n">bib</span> <span class="k">on</span> <span class="n">bib</span><span class="p">.</span><span class="n">bib_record_num</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">bib_record_num</span>
+<span class="k">where</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">location_code</span> <span class="o">=</span> <span class="s1">&#39;1cjbd&#39;</span>
+<span class="k">order</span> <span class="k">by</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">location_code</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_format</span><span class="p">,</span>
+  <span class="n">bib</span><span class="p">.</span><span class="n">best_author</span><span class="p">,</span>
+  <span class="n">bib</span><span class="p">.</span><span class="n">best_title</span><span class="p">,</span>
+  <span class="n">item</span><span class="p">.</span><span class="n">item_callnumber</span>
+<span class="k">limit</span>
+  <span class="mi">10</span>
+</pre></div>
+</div>
+<p>… produces the following output:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 6%" />
+<col style="width: 12%" />
+<col style="width: 42%" />
+<col style="width: 5%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>item_record_num</p></th>
+<th class="head"><p>bib_record_num</p></th>
+<th class="head"><p>location_code</p></th>
+<th class="head"><p>item_format</p></th>
+<th class="head"><p>item_callnumber</p></th>
+<th class="head"><p>best_author</p></th>
+<th class="head"><p>best_title</p></th>
+<th class="head"><p>barcode</p></th>
+<th class="head"><p>item_status_code</p></th>
+<th class="head"><p>checkout_total</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>10888518</p></td>
+<td><p>3550528</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Book</p></td>
+<td><p>easy</p></td>
+<td><p>Sill, Cathryn P., 1953- author.</p></td>
+<td><p>Curious about mammals</p></td>
+<td><p>A000070519154</p></td>
+<td><p>-</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>5197805</p></td>
+<td><p>2778660</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy</p></td>
+<td></td>
+<td><p>1, 2, 3, sí! : a numbers book in English and Spanish / [design by Madeleine Budnick ; photography by Peggy Tenison].</p></td>
+<td><p>A000029565165</p></td>
+<td><p>n</p></td>
+<td><p>19</p></td>
+</tr>
+<tr class="row-even"><td><p>8956516</p></td>
+<td><p>3171999</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy</p></td>
+<td></td>
+<td><p>123 Blaze!</p></td>
+<td><p>A000052530748</p></td>
+<td><p>-</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td><p>5473860</p></td>
+<td><p>2764313</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy</p></td>
+<td></td>
+<td><p>5 busy ducklings.</p></td>
+<td><p>1825831-1001</p></td>
+<td><p>w</p></td>
+<td><p>26</p></td>
+</tr>
+<tr class="row-even"><td><p>6787418</p></td>
+<td><p>2793571</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy</p></td>
+<td></td>
+<td><p>A day at the zoo.</p></td>
+<td><p>A000037147154</p></td>
+<td><p>n</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-odd"><td><p>10214507</p></td>
+<td><p>3407900</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy</p></td>
+<td></td>
+<td><p>A little book about ABCs</p></td>
+<td><p>A000062920188</p></td>
+<td><p>n</p></td>
+<td><p>5</p></td>
+</tr>
+<tr class="row-even"><td><p>7337421</p></td>
+<td><p>2841761</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy</p></td>
+<td></td>
+<td><p>ABC 123.</p></td>
+<td><p>A000037726080</p></td>
+<td><p>e</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>10125351</p></td>
+<td><p>3393624</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy chagollan</p></td>
+<td></td>
+<td><p>ABC animals</p></td>
+<td><p>A000064045935</p></td>
+<td><p>-</p></td>
+<td><p>14</p></td>
+</tr>
+<tr class="row-even"><td><p>9688691</p></td>
+<td><p>3316941</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy</p></td>
+<td></td>
+<td><p>ABC color</p></td>
+<td><p>A000058339714</p></td>
+<td><p>-</p></td>
+<td><p>8</p></td>
+</tr>
+<tr class="row-odd"><td><p>10270587</p></td>
+<td><p>3421412</p></td>
+<td><p>1cjbd</p></td>
+<td><p>Juvenile Book</p></td>
+<td><p>easy</p></td>
+<td></td>
+<td><p>ABC what can she be? : girls can be anything they want to be, from A to Z</p></td>
+<td><p>A000064370325</p></td>
+<td><p>-</p></td>
+<td><p>11</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="aggregate-counts">
 <h2>Aggregate Counts<a class="headerlink" href="#aggregate-counts" title="Permalink to this headline">¶</a></h2>
 <p>This basic example gives an overall count of the numbers of items included in the snapshots.</p>
@@ -195,7 +510,7 @@
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="database_tables.html" class="btn btn-neutral float-right" title="Database Tables, Columns, and Definitions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="index.html" class="btn btn-neutral float-left" title="collection-analysis documentation &amp; resources" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="static_queries.html" class="btn btn-neutral float-left" title="Static SQL Queries" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

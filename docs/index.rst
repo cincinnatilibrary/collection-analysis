@@ -10,13 +10,18 @@ collection-analysis documentation & resources
 
 The interface and included data can be found here:
 
-https://ilsweb.cincinnatilibrary.org/collection-analysis/
+* https://ilsweb.cincinnatilibrary.org/collection-analysis/
+
+Source for these docs as well as the export / import scripts and more can be found here:
+
+* https://github.com/cincinnatilibrary/collection-analysis
+
+
+General Purpose of this Resource
+--------------------------------
 
 This resource is provided to document the snapshot process for the Cincinnati &
-Hamilton County Public Library (CHPL) "current_collection" data set and to
-provide other report resources related to the "collection-analysis" data set
-that is linked above.
-
+Hamilton County Public Library (CHPL) `"current_collection" data set <https://ilsweb.cincinnatilibrary.org/collection-analysis/>`_ and to provide other resources related to the use of this tool.
 
 Using the Data Set
 ------------------
@@ -51,12 +56,13 @@ Below are static SQL queries for reports and analysis
 
    static_queries
 
-More examples and use general use cases can be found below.
+More examples, general use-cases and miscellaneous information can be found below.
 
 .. toctree::
    :maxdepth: 1
    
    examples
+   misc
 
 What is Included in the Data Set?
 ---------------------------------

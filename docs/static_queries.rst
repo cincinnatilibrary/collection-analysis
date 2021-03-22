@@ -84,3 +84,40 @@ Item Records Deleted Within the Last Week
     di.location_code
     limit
     3000 offset :page * 3000
+
+Collection Value
+----------------
+
+`click to run Collection Value query on current_collection database <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection?sql=with+branch_locations+as+(%0D%0A++select%0D%0A++++n.name%2C%0D%0A++++b.code_num%2C%0D%0A++++l.*%0D%0A++from%0D%0A++++branch_name+as+n%0D%0A++++join+branch+as+b+on+b.id+%3D+n.branch_id%0D%0A++++join+location+as+l+on+l.branch_code_num+%3D+b.code_num%0D%0A)%0D%0Aselect%0D%0A++l.name+as+branch_name%2C%0D%0A++item_format%2C%0D%0A++sum(price_cents)+%2F+100.0+as+total_value%0D%0Afrom%0D%0A++branch_locations+as+l%0D%0A++%0D%0A++join%0D%0A++item+as+i+on+i.location_code+%3D+l.code%0D%0A++%0D%0Agroup+by+%0D%0Al.name%2C%0D%0Ai.item_format&_hide_sql=1>`_
+
+`click to run Collection Value query on collection-2021-01-04 database <https://ilsweb.cincinnatilibrary.org/collection-analysis/collection-2021-01-04?sql=with+branch_locations+as+%28%0D%0A++select%0D%0A++++n.name%2C%0D%0A++++b.code_num%2C%0D%0A++++l.%2A%0D%0A++from%0D%0A++++branch_name+as+n%0D%0A++++join+branch+as+b+on+b.id+%3D+n.branch_id%0D%0A++++join+location+as+l+on+l.branch_code_num+%3D+b.code_num%0D%0A%29%0D%0Aselect%0D%0A++l.name+as+branch_name%2C%0D%0A++item_format%2C%0D%0A++sum%28price_cents%29+%2F+100.0+as+total_value%0D%0Afrom%0D%0A++branch_locations+as+l%0D%0A++%0D%0A++join%0D%0A++item+as+i+on+i.location_code+%3D+l.code%0D%0A++%0D%0Agroup+by+%0D%0Al.name%2C%0D%0Ai.item_format&_hide_sql=1>`_
+
+
+`click to run Collection Value query on collection-2020-01-06 database <https://ilsweb.cincinnatilibrary.org/collection-analysis/collection-2020-01-06-50dd950?sql=with+branch_locations+as+%28%0D%0A++select%0D%0A++++n.name%2C%0D%0A++++b.code_num%2C%0D%0A++++l.*%0D%0A++from%0D%0A++++branch_name+as+n%0D%0A++++join+branch+as+b+on+b.id+%3D+n.branch_id%0D%0A++++join+location+as+l+on+l.branch_code_num+%3D+b.code_num%0D%0A%29%0D%0Aselect%0D%0A++l.name+as+branch_name%2C%0D%0A++item_format%2C%0D%0A++sum%28price_cents%29+%2F+100.0+as+total_value%0D%0Afrom%0D%0A++branch_locations+as+l%0D%0A++join+item+as+i+on+i.location_code+%3D+l.code%0D%0Agroup+by%0D%0A++l.name%2C%0D%0A++i.item_format&_hide_sql=1>`_
+
+.. code-block:: sql
+
+   with branch_locations as (
+   select
+       n.name,
+       b.code_num,
+       l.*
+   from
+       branch_name as n
+       join branch as b on b.id = n.branch_id
+       join location as l on l.branch_code_num = b.code_num
+   )
+   select
+   l.name as branch_name,
+   item_format,
+   sum(price_cents) / 100.0 as total_value
+   from
+   branch_locations as l
+   
+   join
+   item as i on i.location_code = l.code
+   
+   group by 
+   l.name,
+   i.item_format
+
