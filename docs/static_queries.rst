@@ -126,7 +126,7 @@ Available Items & Circulation Information By Location at Branch
 
 For item status ``-``, aggregate count of total items, items with 0 checkouts, items with 1 or more checkouts, and items checked out at the time of the snapshot.
 
-Note: This query accepts the query parameter, ``branch_code_num``. These codes for CHPL Branch locations can be found from the following query: `branch names and code numbers <`https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection?sql=select+br.code_num%2C+bn.name%0Afrom+branch+as+br+join+branch_name+as+bn+on+bn.branch_id+%3D+br.id>`_
+Note: This query accepts the query parameter, ``branch_code_num``. These codes for CHPL Branch locations can be found from the following query: `branch names and code numbers <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection?sql=select+br.code_num%2C+bn.name%0Afrom+branch+as+br+join+branch_name+as+bn+on+bn.branch_id+%3D+br.id>`_
 
 `click to run query on current_collection database <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection?sql=select%0D%0A++i.location_code%2C%0D%0A++ln.name%2C%0D%0A++--+loc.branch_code_num%2C%0D%0A++--+bn.name+as+branch_name%2C%0D%0A++count%28%2A%29+as+count_total_available_items%2C%0D%0A++%28%0D%0A++++select%0D%0A++++++count%28%2A%29%0D%0A++++from%0D%0A++++++item+as+i2%0D%0A++++where%0D%0A++++++i2.location_code+%3D+i.location_code%0D%0A++++++and+i2.item_status_code+%3D+%27-%27%0D%0A++++++and+i2.checkout_total+%3D+0%0D%0A++%29+as+count_items_0_checkouts%2C%0D%0A++%28%0D%0A++++select%0D%0A++++++count%28%2A%29%0D%0A++++from%0D%0A++++++item+as+i2%0D%0A++++where%0D%0A++++++i2.location_code+%3D+i.location_code%0D%0A++++++and+i2.item_status_code+%3D+%27-%27%0D%0A++++++and+i2.checkout_total+%3E+0%0D%0A++%29+as+count_items_gt_0_checkouts%2C%0D%0A++%28%0D%0A++++select%0D%0A++++++count%28%2A%29%0D%0A++++from%0D%0A++++++item+as+i2%0D%0A++++where%0D%0A++++++i2.location_code+%3D+i.location_code%0D%0A++++++and+i2.item_status_code+%3D+%27-%27%0D%0A++++++and+i2.checkout_date+is+not+null%0D%0A++%29+as+count_curr_checked_out%0D%0Afrom%0D%0A++item+as+i%0D%0A++left+outer+join+location+as+loc+on+loc.code+%3D+i.location_code%0D%0A++left+outer+join+location_name+as+ln+on+ln.location_id+%3D+loc.id%0D%0A++left+outer+join+branch+as+br+on+br.code_num+%3D+loc.branch_code_num%0D%0A++left+outer+join+branch_name+as+bn+on+bn.branch_id+%3D+br.id%0D%0Awhere%0D%0A++i.item_status_code+%3D+%27-%27%0D%0A++and+br.code_num+%3D+%3Abranch_code_num%0D%0Agroup+by%0D%0A++i.location_code%2C%0D%0A++ln.name+--+loc.branch_code_num%2C%0D%0A++--+branch_name%0D%0Aorder+by%0D%0A++loc.branch_code_num&branch_code_num=1&_hide_sql=1>`_
 
@@ -182,3 +182,83 @@ Note: This query accepts the query parameter, ``branch_code_num``. These codes f
      ln.name
    order by
      loc.branch_code_num
+
+
+
+Lucky Day Leased Books and Leased DVDs Analysis
+-----------------------------------------------
+
+`click to run query on current_collection database <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection?sql=--+find+lucky+day+leased+books+and+leased+dvds%2C+and+provide+some+basic+statistics+around+those+items+grouped+by+title%0D%0Awith+ld_item_info+as+%28%0D%0A++select%0D%0A++++item.bib_record_num%2C%0D%0A++++price_cents%2C%0D%0A++++item.checkout_total%2C%0D%0A++++--+lucky+day+items+are+not+renewable%0D%0A++++--+item.renewal_total%2C%0D%0A++++item.item_status_code%2C%0D%0A++++item.creation_date%2C%0D%0A++++item.barcode%2C%0D%0A++++item.item_format%0D%0A++from%0D%0A++++item%0D%0A++where%0D%0A++++item.item_format+in+%28%27Leased+Book%27%2C+%27Leased+DVD%27%29%0D%0A++++and+lower%28item.barcode%29+LIKE+%22l%25%22%0D%0A%29%0D%0Aselect%0D%0A++bib.best_title%2C%0D%0A++bib.bib_record_num%2C%0D%0A++bib.creation_date+as+bib_creation_date%2C%0D%0A++%28%0D%0A++++select%0D%0A++++++COUNT%28%2A%29%0D%0A++++from%0D%0A++++++item%0D%0A++++where%0D%0A++++++item.bib_record_num+%3D+bib.bib_record_num%0D%0A++++++and+item.item_format+not+in+%28%27Leased+Book%27%2C+%27Leased+DVD%27%29%0D%0A++++limit%0D%0A++++++1%0D%0A++%29+as+count_non_ld_items%2C%0D%0A++%28%0D%0A++++select%0D%0A++++++sum%28checkout_total%29%0D%0A++++from%0D%0A++++++item%0D%0A++++where%0D%0A++++++item.bib_record_num+%3D+bib.bib_record_num%0D%0A++++++and+item.item_format+not+in+%28%27Leased+Book%27%2C+%27Leased+DVD%27%29%0D%0A++++limit%0D%0A++++++1%0D%0A++%29+as+total_non_ld_items_checkouts%2C%0D%0A++ld.item_format+as+ld_item_format%2C%0D%0A++round%28%0D%0A++++avg%28%0D%0A++++++%28julianday%28%27now%27%29+-+julianday%28ld.creation_date%29%29%0D%0A++++%29%2C%0D%0A++++1%0D%0A++%29+as+avg_ld_item_age_days%2C%0D%0A++count%28%2A%29+as+count_ld_items%2C%0D%0A++sum%28checkout_total%29+as+total_ld_items_checkouts%2C%0D%0A++sum%28price_cents%29+%2F+100.0+as+total_ld_items_price%2C%0D%0A++round%28%0D%0A++++%28sum%28price_cents%29+%2F+100.0%29+%2F+sum%28checkout_total%29%2C%0D%0A++++2%0D%0A++%29+as+cost_per_ld_checkout%0D%0Afrom%0D%0A++ld_item_info+as+ld%0D%0A++join+bib+on+bib.bib_record_num+%3D+ld.bib_record_num%0D%0Agroup+by%0D%0A++bib.best_title%2C%0D%0A++bib.bib_record_num%2C%0D%0A++bib.creation_date%2C%0D%0A++ld.item_format%0D%0Aorder+by%0D%0A++avg_ld_item_age_days&_hide_sql=1>`__
+
+This report will produce a simple analysis of the Lucky Day Items (identified by items with the item format ('Leased Book', 'Leased DVD') and item barcodes starting with the character `l`). The report is Title-based, and compiles the average age in days of linked items, total counts of linked items, total checkouts linked items, and a cost per item checkout (based on the item price).
+
+.. code-block:: sql
+
+   -- find lucky day leased books and leased dvds, and provide some basic statistics around those items grouped by title
+   with ld_item_info as (
+     select
+       item.bib_record_num,
+       price_cents,
+       item.checkout_total,
+       -- lucky day items are not renewable
+       -- item.renewal_total,
+       item.item_status_code,
+       item.creation_date,
+       item.barcode,
+       item.item_format
+     from
+       item
+     where
+       item.item_format in ('Leased Book', 'Leased DVD')
+       and lower(item.barcode) LIKE "l%"
+   )
+   select
+     bib.best_title,
+     bib.bib_record_num,
+     bib.creation_date as bib_creation_date,
+     (
+       select
+         COUNT(*)
+       from
+         item
+       where
+         item.bib_record_num = bib.bib_record_num
+         and item.item_format not in ('Leased Book', 'Leased DVD')
+       limit
+         1
+     ) as count_non_ld_items,
+     (
+       select
+         sum(checkout_total)
+       from
+         item
+       where
+         item.bib_record_num = bib.bib_record_num
+         and item.item_format not in ('Leased Book', 'Leased DVD')
+       limit
+         1
+     ) as total_non_ld_items_checkouts,
+     ld.item_format as ld_item_format,
+     round(
+       avg(
+         (julianday('now') - julianday(ld.creation_date))
+       ),
+       1
+     ) as avg_ld_item_age_days,
+     count(*) as count_ld_items,
+     sum(checkout_total) as total_ld_items_checkouts,
+     sum(price_cents) / 100.0 as total_ld_items_price,
+     round(
+       (sum(price_cents) / 100.0) / sum(checkout_total),
+       2
+     ) as cost_per_ld_checkout
+   from
+     ld_item_info as ld
+     join bib on bib.bib_record_num = ld.bib_record_num
+   group by
+     bib.best_title,
+     bib.bib_record_num,
+     bib.creation_date,
+     ld.item_format
+   order by
+     avg_ld_item_age_days

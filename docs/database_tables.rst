@@ -1,6 +1,8 @@
 Database Tables, Columns, and Definitions
 =========================================
 
+.. contents::
+
 The following are tables contained in each of the database snapshots
 
 ``bib`` Table

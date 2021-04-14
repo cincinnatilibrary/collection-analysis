@@ -1,5 +1,7 @@
-Miscellaneous Links and Information
-===================================
+Miscellaneous Links & Information
+=================================
+
+.. contents::
 
 Below you will find some other links and resources that may prove useful.
 
