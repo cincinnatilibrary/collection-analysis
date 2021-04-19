@@ -94,6 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#collection-value">Collection Value</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#available-items-circulation-information-by-location-at-branch">Available Items &amp; Circulation Information By Location at Branch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lucky-day-leased-books-and-leased-dvds-analysis">Lucky Day Leased Books and Leased DVDs Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#item-data-consistency-report-excluded-titles">Item Data Consistency Report – Excluded Titles</a></li>
 </ul>
 </li>
 </ul>
@@ -192,6 +193,7 @@
 <li><p><a class="reference internal" href="#collection-value" id="id4">Collection Value</a></p></li>
 <li><p><a class="reference internal" href="#available-items-circulation-information-by-location-at-branch" id="id5">Available Items &amp; Circulation Information By Location at Branch</a></p></li>
 <li><p><a class="reference internal" href="#lucky-day-leased-books-and-leased-dvds-analysis" id="id6">Lucky Day Leased Books and Leased DVDs Analysis</a></p></li>
+<li><p><a class="reference internal" href="#item-data-consistency-report-excluded-titles" id="id7">Item Data Consistency Report – Excluded Titles</a></p></li>
 </ul>
 </li>
 </ul>
@@ -435,6 +437,397 @@
   <span class="n">ld</span><span class="p">.</span><span class="n">item_format</span>
 <span class="k">order</span> <span class="k">by</span>
   <span class="n">avg_ld_item_age_days</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="item-data-consistency-report-excluded-titles">
+<h2><a class="toc-backref" href="#id7">Item Data Consistency Report – Excluded Titles</a><a class="headerlink" href="#item-data-consistency-report-excluded-titles" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-204d100?sql=--+this+query+will+display+some+bib+and+item+information+for+titles+that+are+to+be+excluded+from+the+Item+Data+Consistency+Report%0D%0Aselect%0D%0A++b.bib_record_num%2C%0D%0A++b.best_author%2C%0D%0A++b.best_title%2C%0D%0A++cast%28publish_year+as+integer%29+as+publish_year%2C%0D%0A++b.creation_date%2C%0D%0A++b.record_last_updated%2C%0D%0A++b.isbn%2C%0D%0A++%28%0D%0A++++select%0D%0A++++++count%28%2A%29%0D%0A++++from%0D%0A++++++item%0D%0A++++where%0D%0A++++++item.bib_record_num+%3D+b.bib_record_num%0D%0A++%29+as+total_item_count%2C%0D%0A++%28%0D%0A++++with+locations+as+%28%0D%0A++++++select%0D%0A++++++++DISTINCT+location_code%0D%0A++++++from%0D%0A++++++++item%0D%0A++++++where%0D%0A++++++++item.bib_record_num+%3D+b.bib_record_num%0D%0A++++++order+by%0D%0A++++++++location_code%0D%0A++++%29%0D%0A++++select%0D%0A++++++group_concat+%28location_code%29%0D%0A++++from%0D%0A++++++locations%0D%0A++%29+as+item_locations%0D%0Afrom%0D%0A++bib+as+b%0D%0Awhere%0D%0A++--+these+titles+are+considered+%22teen+classics%22+or+otherwise%2C+and+are+excluded+from+the+IDC+report%0D%0A++bib_record_num+in+%28%0D%0A++++1008088%2C%0D%0A++++1008092%2C%0D%0A++++1008324%2C%0D%0A++++1009074%2C%0D%0A++++1012471%2C%0D%0A++++1012960%2C%0D%0A++++1016931%2C%0D%0A++++1023324%2C%0D%0A++++1025647%2C%0D%0A++++1026944%2C%0D%0A++++1030135%2C%0D%0A++++1032779%2C%0D%0A++++1033764%2C%0D%0A++++1035984%2C%0D%0A++++1036364%2C%0D%0A++++1038132%2C%0D%0A++++1041785%2C%0D%0A++++1042130%2C%0D%0A++++1044943%2C%0D%0A++++1045391%2C%0D%0A++++1057164%2C%0D%0A++++1068843%2C%0D%0A++++1069142%2C%0D%0A++++1080942%2C%0D%0A++++1098072%2C%0D%0A++++1123311%2C%0D%0A++++1125257%2C%0D%0A++++1131252%2C%0D%0A++++1136783%2C%0D%0A++++1137858%2C%0D%0A++++1149649%2C%0D%0A++++1156722%2C%0D%0A++++1163065%2C%0D%0A++++1195037%2C%0D%0A++++1198983%2C%0D%0A++++1208160%2C%0D%0A++++1208782%2C%0D%0A++++1214946%2C%0D%0A++++1258923%2C%0D%0A++++1260206%2C%0D%0A++++1262052%2C%0D%0A++++1262195%2C%0D%0A++++1263884%2C%0D%0A++++1268373%2C%0D%0A++++1268384%2C%0D%0A++++1274970%2C%0D%0A++++1276299%2C%0D%0A++++1283114%2C%0D%0A++++1285037%2C%0D%0A++++1318751%2C%0D%0A++++1321722%2C%0D%0A++++1328024%2C%0D%0A++++1330867%2C%0D%0A++++1332284%2C%0D%0A++++1375132%2C%0D%0A++++1376771%2C%0D%0A++++1386082%2C%0D%0A++++1392809%2C%0D%0A++++1395441%2C%0D%0A++++1405850%2C%0D%0A++++1417890%2C%0D%0A++++1422875%2C%0D%0A++++1427726%2C%0D%0A++++1465219%2C%0D%0A++++1465868%2C%0D%0A++++1473691%2C%0D%0A++++1476334%2C%0D%0A++++1482199%2C%0D%0A++++1500156%2C%0D%0A++++1500725%2C%0D%0A++++1519112%2C%0D%0A++++1519118%2C%0D%0A++++1520620%2C%0D%0A++++1521555%2C%0D%0A++++1523209%2C%0D%0A++++1524032%2C%0D%0A++++1524039%2C%0D%0A++++1524049%2C%0D%0A++++1528683%2C%0D%0A++++1534705%2C%0D%0A++++1542739%2C%0D%0A++++1555182%2C%0D%0A++++1557339%2C%0D%0A++++1557775%2C%0D%0A++++1564639%2C%0D%0A++++1573242%2C%0D%0A++++1579598%2C%0D%0A++++1584994%2C%0D%0A++++1596027%2C%0D%0A++++1610988%2C%0D%0A++++1630040%2C%0D%0A++++1637976%2C%0D%0A++++1639082%2C%0D%0A++++1639351%2C%0D%0A++++1657016%2C%0D%0A++++1657539%2C%0D%0A++++1723544%2C%0D%0A++++1732910%2C%0D%0A++++1748806%2C%0D%0A++++1750917%2C%0D%0A++++1751512%2C%0D%0A++++1753059%2C%0D%0A++++1756363%2C%0D%0A++++1765488%2C%0D%0A++++1777013%2C%0D%0A++++1777554%2C%0D%0A++++1789689%2C%0D%0A++++1798623%2C%0D%0A++++1806397%2C%0D%0A++++1815906%2C%0D%0A++++1821901%2C%0D%0A++++1823479%2C%0D%0A++++1824853%2C%0D%0A++++1824863%2C%0D%0A++++1824881%2C%0D%0A++++1837580%2C%0D%0A++++1874105%2C%0D%0A++++1874105%2C%0D%0A++++1874617%2C%0D%0A++++1881635%2C%0D%0A++++1891612%2C%0D%0A++++1893725%2C%0D%0A++++1900878%2C%0D%0A++++1915536%2C%0D%0A++++1933582%2C%0D%0A++++1934753%2C%0D%0A++++1960352%2C%0D%0A++++1961576%2C%0D%0A++++1961887%2C%0D%0A++++1967302%2C%0D%0A++++1986993%2C%0D%0A++++1992305%2C%0D%0A++++1996454%2C%0D%0A++++2005510%2C%0D%0A++++2006956%2C%0D%0A++++2006985%2C%0D%0A++++2008273%2C%0D%0A++++2012712%2C%0D%0A++++2014369%2C%0D%0A++++2028943%2C%0D%0A++++2040871%2C%0D%0A++++2048799%2C%0D%0A++++2052473%2C%0D%0A++++2069758%2C%0D%0A++++2070459%2C%0D%0A++++2080910%2C%0D%0A++++2081561%2C%0D%0A++++2086313%2C%0D%0A++++2089850%2C%0D%0A++++2092147%2C%0D%0A++++2092155%2C%0D%0A++++2111249%2C%0D%0A++++2118284%2C%0D%0A++++2130304%2C%0D%0A++++2133134%2C%0D%0A++++2137975%2C%0D%0A++++2169420%2C%0D%0A++++2171086%2C%0D%0A++++2186599%2C%0D%0A++++2203330%2C%0D%0A++++2203330%2C%0D%0A++++2203367%2C%0D%0A++++2204141%2C%0D%0A++++2210745%2C%0D%0A++++2212066%2C%0D%0A++++2215585%2C%0D%0A++++2220611%2C%0D%0A++++2225085%2C%0D%0A++++2228373%2C%0D%0A++++2229190%2C%0D%0A++++2229649%2C%0D%0A++++2247002%2C%0D%0A++++2506864%2C%0D%0A++++2252851%2C%0D%0A++++2264431%2C%0D%0A++++2265447%2C%0D%0A++++2268806%2C%0D%0A++++2270361%2C%0D%0A++++2315417%2C%0D%0A++++2325236%2C%0D%0A++++2330280%2C%0D%0A++++2331675%2C%0D%0A++++2349894%2C%0D%0A++++2377225%2C%0D%0A++++2385659%2C%0D%0A++++2388695%2C%0D%0A++++2390408%2C%0D%0A++++2399213%2C%0D%0A++++2401846%2C%0D%0A++++2402050%2C%0D%0A++++2403296%2C%0D%0A++++2424769%2C%0D%0A++++2427365%2C%0D%0A++++2439149%2C%0D%0A++++2449995%2C%0D%0A++++2454966%2C%0D%0A++++2460026%2C%0D%0A++++2467038%2C%0D%0A++++2476394%2C%0D%0A++++2476870%2C%0D%0A++++2487394%2C%0D%0A++++2492541%2C%0D%0A++++2493883%2C%0D%0A++++2494668%2C%0D%0A++++2508710%2C%0D%0A++++2518435%2C%0D%0A++++2526514%2C%0D%0A++++2530079%2C%0D%0A++++2530507%2C%0D%0A++++2532883%2C%0D%0A++++2538123%2C%0D%0A++++2540289%2C%0D%0A++++2540405%2C%0D%0A++++2547935%2C%0D%0A++++2556742%2C%0D%0A++++2560158%2C%0D%0A++++2566314%2C%0D%0A++++2572417%2C%0D%0A++++2574892%2C%0D%0A++++2578161%2C%0D%0A++++2592633%2C%0D%0A++++2598018%2C%0D%0A++++2610287%2C%0D%0A++++2610368%2C%0D%0A++++2611069%2C%0D%0A++++2611525%2C%0D%0A++++2613714%2C%0D%0A++++2615465%2C%0D%0A++++2615487%2C%0D%0A++++2615515%2C%0D%0A++++2615605%2C%0D%0A++++2615620%2C%0D%0A++++2615705%2C%0D%0A++++2615908%2C%0D%0A++++2619886%2C%0D%0A++++2624870%2C%0D%0A++++2628120%2C%0D%0A++++2628125%2C%0D%0A++++2638970%2C%0D%0A++++2640657%2C%0D%0A++++2643029%2C%0D%0A++++2654111%2C%0D%0A++++2659891%2C%0D%0A++++2663126%2C%0D%0A++++2667577%2C%0D%0A++++2670636%2C%0D%0A++++2670823%2C%0D%0A++++2676813%2C%0D%0A++++2693063%2C%0D%0A++++2697347%2C%0D%0A++++2702313%2C%0D%0A++++2712108%2C%0D%0A++++2712532%2C%0D%0A++++2712549%2C%0D%0A++++2712608%2C%0D%0A++++2713686%2C%0D%0A++++2713850%2C%0D%0A++++2726440%2C%0D%0A++++2729046%2C%0D%0A++++2738268%2C%0D%0A++++2739884%2C%0D%0A++++2741117%2C%0D%0A++++2772166%2C%0D%0A++++2784353%2C%0D%0A++++2784616%2C%0D%0A++++2785618%2C%0D%0A++++2788500%2C%0D%0A++++2792223%2C%0D%0A++++2792790%2C%0D%0A++++2823065%2C%0D%0A++++2883551%2C%0D%0A++++2886553%2C%0D%0A++++2963099%2C%0D%0A++++2969363%2C%0D%0A++++2972940%2C%0D%0A++++2994736%2C%0D%0A++++3134360%2C%0D%0A++++3192709%2C%0D%0A++++3193734%2C%0D%0A++++3202674%2C%0D%0A++++3285022%2C%0D%0A++++3293824%2C%0D%0A++++1416907%2C%0D%0A++++2493664%2C%0D%0A++++2985934%2C%0D%0A++++2985935%2C%0D%0A++++2493587%2C%0D%0A++++1803522%2C%0D%0A++++2755125%2C%0D%0A++++2714814%2C%0D%0A++++2500300%2C%0D%0A++++2985933%2C%0D%0A++++3108309%2C%0D%0A++++3108308%2C%0D%0A++++2884705%2C%0D%0A++++2275400%2C%0D%0A++++3229667%2C%0D%0A++++1803502%2C%0D%0A++++1803512%2C%0D%0A++++2275489%2C%0D%0A++++2985932%2C%0D%0A++++2981982%2C%0D%0A++++1832463%2C%0D%0A++++1971745%2C%0D%0A++++1770999%2C%0D%0A++++2318436%2C%0D%0A++++2096954%2C%0D%0A++++3181534%2C%0D%0A++++3181535%2C%0D%0A++++3181536%2C%0D%0A++++3245632%2C%0D%0A++++2970259%2C%0D%0A++++3204670%2C%0D%0A++++3509035%2C%0D%0A++++3208365%2C%0D%0A++++2662378%2C%0D%0A++++3383599%2C%0D%0A++++3371597%2C%0D%0A++++3383599%2C%0D%0A++++2247002%2C%0D%0A++++3371597%2C%0D%0A++++2506864%2C%0D%0A++++1906584%2C%0D%0A++++2750249%2C%0D%0A++++2410509%2C%0D%0A++++742749%2C%0D%0A++++3059271%2C%0D%0A++++2508695%2C%0D%0A++++3352422%2C%0D%0A++++3150089%2C%0D%0A++++2555245%2C%0D%0A++++3208436%2C%0D%0A++++2884408%2C%0D%0A++++2786980%2C%0D%0A++++2544222%2C%0D%0A++++2686721%2C%0D%0A++++3287286%2C%0D%0A++++2987092%2C%0D%0A++++3238720%2C%0D%0A++++3393392%2C%0D%0A++++3466158%2C%0D%0A++++2599355%2C%0D%0A++++1579122%2C%0D%0A++++2771545%0D%0A++%29%0D%0Aorder+by%0D%0A++creation_date&amp;_hide_sql=1">click to run query on current_collection database</a></p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- this query will display some bib and item information for titles that are to be excluded from the Item Data Consistency Report</span>
+<span class="k">select</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">bib_record_num</span><span class="p">,</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">best_author</span><span class="p">,</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">best_title</span><span class="p">,</span>
+  <span class="k">cast</span><span class="p">(</span><span class="n">publish_year</span> <span class="k">as</span> <span class="nb">integer</span><span class="p">)</span> <span class="k">as</span> <span class="n">publish_year</span><span class="p">,</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">creation_date</span><span class="p">,</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">record_last_updated</span><span class="p">,</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">isbn</span><span class="p">,</span>
+  <span class="p">(</span>
+    <span class="k">select</span>
+      <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+    <span class="k">from</span>
+      <span class="n">item</span>
+    <span class="k">where</span>
+      <span class="n">item</span><span class="p">.</span><span class="n">bib_record_num</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="n">bib_record_num</span>
+  <span class="p">)</span> <span class="k">as</span> <span class="n">total_item_count</span><span class="p">,</span>
+  <span class="p">(</span>
+    <span class="k">with</span> <span class="n">locations</span> <span class="k">as</span> <span class="p">(</span>
+      <span class="k">select</span>
+        <span class="k">DISTINCT</span> <span class="n">location_code</span>
+      <span class="k">from</span>
+        <span class="n">item</span>
+      <span class="k">where</span>
+        <span class="n">item</span><span class="p">.</span><span class="n">bib_record_num</span> <span class="o">=</span> <span class="n">b</span><span class="p">.</span><span class="n">bib_record_num</span>
+      <span class="k">order</span> <span class="k">by</span>
+        <span class="n">location_code</span>
+    <span class="p">)</span>
+    <span class="k">select</span>
+      <span class="n">group_concat</span> <span class="p">(</span><span class="n">location_code</span><span class="p">)</span>
+    <span class="k">from</span>
+      <span class="n">locations</span>
+  <span class="p">)</span> <span class="k">as</span> <span class="n">item_locations</span>
+<span class="k">from</span>
+  <span class="n">bib</span> <span class="k">as</span> <span class="n">b</span>
+<span class="k">where</span>
+  <span class="c1">-- these titles are considered &quot;teen classics&quot; or otherwise, and are excluded from the IDC report</span>
+  <span class="n">bib_record_num</span> <span class="k">in</span> <span class="p">(</span>
+    <span class="mi">1008088</span><span class="p">,</span>
+    <span class="mi">1008092</span><span class="p">,</span>
+    <span class="mi">1008324</span><span class="p">,</span>
+    <span class="mi">1009074</span><span class="p">,</span>
+    <span class="mi">1012471</span><span class="p">,</span>
+    <span class="mi">1012960</span><span class="p">,</span>
+    <span class="mi">1016931</span><span class="p">,</span>
+    <span class="mi">1023324</span><span class="p">,</span>
+    <span class="mi">1025647</span><span class="p">,</span>
+    <span class="mi">1026944</span><span class="p">,</span>
+    <span class="mi">1030135</span><span class="p">,</span>
+    <span class="mi">1032779</span><span class="p">,</span>
+    <span class="mi">1033764</span><span class="p">,</span>
+    <span class="mi">1035984</span><span class="p">,</span>
+    <span class="mi">1036364</span><span class="p">,</span>
+    <span class="mi">1038132</span><span class="p">,</span>
+    <span class="mi">1041785</span><span class="p">,</span>
+    <span class="mi">1042130</span><span class="p">,</span>
+    <span class="mi">1044943</span><span class="p">,</span>
+    <span class="mi">1045391</span><span class="p">,</span>
+    <span class="mi">1057164</span><span class="p">,</span>
+    <span class="mi">1068843</span><span class="p">,</span>
+    <span class="mi">1069142</span><span class="p">,</span>
+    <span class="mi">1080942</span><span class="p">,</span>
+    <span class="mi">1098072</span><span class="p">,</span>
+    <span class="mi">1123311</span><span class="p">,</span>
+    <span class="mi">1125257</span><span class="p">,</span>
+    <span class="mi">1131252</span><span class="p">,</span>
+    <span class="mi">1136783</span><span class="p">,</span>
+    <span class="mi">1137858</span><span class="p">,</span>
+    <span class="mi">1149649</span><span class="p">,</span>
+    <span class="mi">1156722</span><span class="p">,</span>
+    <span class="mi">1163065</span><span class="p">,</span>
+    <span class="mi">1195037</span><span class="p">,</span>
+    <span class="mi">1198983</span><span class="p">,</span>
+    <span class="mi">1208160</span><span class="p">,</span>
+    <span class="mi">1208782</span><span class="p">,</span>
+    <span class="mi">1214946</span><span class="p">,</span>
+    <span class="mi">1258923</span><span class="p">,</span>
+    <span class="mi">1260206</span><span class="p">,</span>
+    <span class="mi">1262052</span><span class="p">,</span>
+    <span class="mi">1262195</span><span class="p">,</span>
+    <span class="mi">1263884</span><span class="p">,</span>
+    <span class="mi">1268373</span><span class="p">,</span>
+    <span class="mi">1268384</span><span class="p">,</span>
+    <span class="mi">1274970</span><span class="p">,</span>
+    <span class="mi">1276299</span><span class="p">,</span>
+    <span class="mi">1283114</span><span class="p">,</span>
+    <span class="mi">1285037</span><span class="p">,</span>
+    <span class="mi">1318751</span><span class="p">,</span>
+    <span class="mi">1321722</span><span class="p">,</span>
+    <span class="mi">1328024</span><span class="p">,</span>
+    <span class="mi">1330867</span><span class="p">,</span>
+    <span class="mi">1332284</span><span class="p">,</span>
+    <span class="mi">1375132</span><span class="p">,</span>
+    <span class="mi">1376771</span><span class="p">,</span>
+    <span class="mi">1386082</span><span class="p">,</span>
+    <span class="mi">1392809</span><span class="p">,</span>
+    <span class="mi">1395441</span><span class="p">,</span>
+    <span class="mi">1405850</span><span class="p">,</span>
+    <span class="mi">1417890</span><span class="p">,</span>
+    <span class="mi">1422875</span><span class="p">,</span>
+    <span class="mi">1427726</span><span class="p">,</span>
+    <span class="mi">1465219</span><span class="p">,</span>
+    <span class="mi">1465868</span><span class="p">,</span>
+    <span class="mi">1473691</span><span class="p">,</span>
+    <span class="mi">1476334</span><span class="p">,</span>
+    <span class="mi">1482199</span><span class="p">,</span>
+    <span class="mi">1500156</span><span class="p">,</span>
+    <span class="mi">1500725</span><span class="p">,</span>
+    <span class="mi">1519112</span><span class="p">,</span>
+    <span class="mi">1519118</span><span class="p">,</span>
+    <span class="mi">1520620</span><span class="p">,</span>
+    <span class="mi">1521555</span><span class="p">,</span>
+    <span class="mi">1523209</span><span class="p">,</span>
+    <span class="mi">1524032</span><span class="p">,</span>
+    <span class="mi">1524039</span><span class="p">,</span>
+    <span class="mi">1524049</span><span class="p">,</span>
+    <span class="mi">1528683</span><span class="p">,</span>
+    <span class="mi">1534705</span><span class="p">,</span>
+    <span class="mi">1542739</span><span class="p">,</span>
+    <span class="mi">1555182</span><span class="p">,</span>
+    <span class="mi">1557339</span><span class="p">,</span>
+    <span class="mi">1557775</span><span class="p">,</span>
+    <span class="mi">1564639</span><span class="p">,</span>
+    <span class="mi">1573242</span><span class="p">,</span>
+    <span class="mi">1579598</span><span class="p">,</span>
+    <span class="mi">1584994</span><span class="p">,</span>
+    <span class="mi">1596027</span><span class="p">,</span>
+    <span class="mi">1610988</span><span class="p">,</span>
+    <span class="mi">1630040</span><span class="p">,</span>
+    <span class="mi">1637976</span><span class="p">,</span>
+    <span class="mi">1639082</span><span class="p">,</span>
+    <span class="mi">1639351</span><span class="p">,</span>
+    <span class="mi">1657016</span><span class="p">,</span>
+    <span class="mi">1657539</span><span class="p">,</span>
+    <span class="mi">1723544</span><span class="p">,</span>
+    <span class="mi">1732910</span><span class="p">,</span>
+    <span class="mi">1748806</span><span class="p">,</span>
+    <span class="mi">1750917</span><span class="p">,</span>
+    <span class="mi">1751512</span><span class="p">,</span>
+    <span class="mi">1753059</span><span class="p">,</span>
+    <span class="mi">1756363</span><span class="p">,</span>
+    <span class="mi">1765488</span><span class="p">,</span>
+    <span class="mi">1777013</span><span class="p">,</span>
+    <span class="mi">1777554</span><span class="p">,</span>
+    <span class="mi">1789689</span><span class="p">,</span>
+    <span class="mi">1798623</span><span class="p">,</span>
+    <span class="mi">1806397</span><span class="p">,</span>
+    <span class="mi">1815906</span><span class="p">,</span>
+    <span class="mi">1821901</span><span class="p">,</span>
+    <span class="mi">1823479</span><span class="p">,</span>
+    <span class="mi">1824853</span><span class="p">,</span>
+    <span class="mi">1824863</span><span class="p">,</span>
+    <span class="mi">1824881</span><span class="p">,</span>
+    <span class="mi">1837580</span><span class="p">,</span>
+    <span class="mi">1874105</span><span class="p">,</span>
+    <span class="mi">1874105</span><span class="p">,</span>
+    <span class="mi">1874617</span><span class="p">,</span>
+    <span class="mi">1881635</span><span class="p">,</span>
+    <span class="mi">1891612</span><span class="p">,</span>
+    <span class="mi">1893725</span><span class="p">,</span>
+    <span class="mi">1900878</span><span class="p">,</span>
+    <span class="mi">1915536</span><span class="p">,</span>
+    <span class="mi">1933582</span><span class="p">,</span>
+    <span class="mi">1934753</span><span class="p">,</span>
+    <span class="mi">1960352</span><span class="p">,</span>
+    <span class="mi">1961576</span><span class="p">,</span>
+    <span class="mi">1961887</span><span class="p">,</span>
+    <span class="mi">1967302</span><span class="p">,</span>
+    <span class="mi">1986993</span><span class="p">,</span>
+    <span class="mi">1992305</span><span class="p">,</span>
+    <span class="mi">1996454</span><span class="p">,</span>
+    <span class="mi">2005510</span><span class="p">,</span>
+    <span class="mi">2006956</span><span class="p">,</span>
+    <span class="mi">2006985</span><span class="p">,</span>
+    <span class="mi">2008273</span><span class="p">,</span>
+    <span class="mi">2012712</span><span class="p">,</span>
+    <span class="mi">2014369</span><span class="p">,</span>
+    <span class="mi">2028943</span><span class="p">,</span>
+    <span class="mi">2040871</span><span class="p">,</span>
+    <span class="mi">2048799</span><span class="p">,</span>
+    <span class="mi">2052473</span><span class="p">,</span>
+    <span class="mi">2069758</span><span class="p">,</span>
+    <span class="mi">2070459</span><span class="p">,</span>
+    <span class="mi">2080910</span><span class="p">,</span>
+    <span class="mi">2081561</span><span class="p">,</span>
+    <span class="mi">2086313</span><span class="p">,</span>
+    <span class="mi">2089850</span><span class="p">,</span>
+    <span class="mi">2092147</span><span class="p">,</span>
+    <span class="mi">2092155</span><span class="p">,</span>
+    <span class="mi">2111249</span><span class="p">,</span>
+    <span class="mi">2118284</span><span class="p">,</span>
+    <span class="mi">2130304</span><span class="p">,</span>
+    <span class="mi">2133134</span><span class="p">,</span>
+    <span class="mi">2137975</span><span class="p">,</span>
+    <span class="mi">2169420</span><span class="p">,</span>
+    <span class="mi">2171086</span><span class="p">,</span>
+    <span class="mi">2186599</span><span class="p">,</span>
+    <span class="mi">2203330</span><span class="p">,</span>
+    <span class="mi">2203330</span><span class="p">,</span>
+    <span class="mi">2203367</span><span class="p">,</span>
+    <span class="mi">2204141</span><span class="p">,</span>
+    <span class="mi">2210745</span><span class="p">,</span>
+    <span class="mi">2212066</span><span class="p">,</span>
+    <span class="mi">2215585</span><span class="p">,</span>
+    <span class="mi">2220611</span><span class="p">,</span>
+    <span class="mi">2225085</span><span class="p">,</span>
+    <span class="mi">2228373</span><span class="p">,</span>
+    <span class="mi">2229190</span><span class="p">,</span>
+    <span class="mi">2229649</span><span class="p">,</span>
+    <span class="mi">2247002</span><span class="p">,</span>
+    <span class="mi">2506864</span><span class="p">,</span>
+    <span class="mi">2252851</span><span class="p">,</span>
+    <span class="mi">2264431</span><span class="p">,</span>
+    <span class="mi">2265447</span><span class="p">,</span>
+    <span class="mi">2268806</span><span class="p">,</span>
+    <span class="mi">2270361</span><span class="p">,</span>
+    <span class="mi">2315417</span><span class="p">,</span>
+    <span class="mi">2325236</span><span class="p">,</span>
+    <span class="mi">2330280</span><span class="p">,</span>
+    <span class="mi">2331675</span><span class="p">,</span>
+    <span class="mi">2349894</span><span class="p">,</span>
+    <span class="mi">2377225</span><span class="p">,</span>
+    <span class="mi">2385659</span><span class="p">,</span>
+    <span class="mi">2388695</span><span class="p">,</span>
+    <span class="mi">2390408</span><span class="p">,</span>
+    <span class="mi">2399213</span><span class="p">,</span>
+    <span class="mi">2401846</span><span class="p">,</span>
+    <span class="mi">2402050</span><span class="p">,</span>
+    <span class="mi">2403296</span><span class="p">,</span>
+    <span class="mi">2424769</span><span class="p">,</span>
+    <span class="mi">2427365</span><span class="p">,</span>
+    <span class="mi">2439149</span><span class="p">,</span>
+    <span class="mi">2449995</span><span class="p">,</span>
+    <span class="mi">2454966</span><span class="p">,</span>
+    <span class="mi">2460026</span><span class="p">,</span>
+    <span class="mi">2467038</span><span class="p">,</span>
+    <span class="mi">2476394</span><span class="p">,</span>
+    <span class="mi">2476870</span><span class="p">,</span>
+    <span class="mi">2487394</span><span class="p">,</span>
+    <span class="mi">2492541</span><span class="p">,</span>
+    <span class="mi">2493883</span><span class="p">,</span>
+    <span class="mi">2494668</span><span class="p">,</span>
+    <span class="mi">2508710</span><span class="p">,</span>
+    <span class="mi">2518435</span><span class="p">,</span>
+    <span class="mi">2526514</span><span class="p">,</span>
+    <span class="mi">2530079</span><span class="p">,</span>
+    <span class="mi">2530507</span><span class="p">,</span>
+    <span class="mi">2532883</span><span class="p">,</span>
+    <span class="mi">2538123</span><span class="p">,</span>
+    <span class="mi">2540289</span><span class="p">,</span>
+    <span class="mi">2540405</span><span class="p">,</span>
+    <span class="mi">2547935</span><span class="p">,</span>
+    <span class="mi">2556742</span><span class="p">,</span>
+    <span class="mi">2560158</span><span class="p">,</span>
+    <span class="mi">2566314</span><span class="p">,</span>
+    <span class="mi">2572417</span><span class="p">,</span>
+    <span class="mi">2574892</span><span class="p">,</span>
+    <span class="mi">2578161</span><span class="p">,</span>
+    <span class="mi">2592633</span><span class="p">,</span>
+    <span class="mi">2598018</span><span class="p">,</span>
+    <span class="mi">2610287</span><span class="p">,</span>
+    <span class="mi">2610368</span><span class="p">,</span>
+    <span class="mi">2611069</span><span class="p">,</span>
+    <span class="mi">2611525</span><span class="p">,</span>
+    <span class="mi">2613714</span><span class="p">,</span>
+    <span class="mi">2615465</span><span class="p">,</span>
+    <span class="mi">2615487</span><span class="p">,</span>
+    <span class="mi">2615515</span><span class="p">,</span>
+    <span class="mi">2615605</span><span class="p">,</span>
+    <span class="mi">2615620</span><span class="p">,</span>
+    <span class="mi">2615705</span><span class="p">,</span>
+    <span class="mi">2615908</span><span class="p">,</span>
+    <span class="mi">2619886</span><span class="p">,</span>
+    <span class="mi">2624870</span><span class="p">,</span>
+    <span class="mi">2628120</span><span class="p">,</span>
+    <span class="mi">2628125</span><span class="p">,</span>
+    <span class="mi">2638970</span><span class="p">,</span>
+    <span class="mi">2640657</span><span class="p">,</span>
+    <span class="mi">2643029</span><span class="p">,</span>
+    <span class="mi">2654111</span><span class="p">,</span>
+    <span class="mi">2659891</span><span class="p">,</span>
+    <span class="mi">2663126</span><span class="p">,</span>
+    <span class="mi">2667577</span><span class="p">,</span>
+    <span class="mi">2670636</span><span class="p">,</span>
+    <span class="mi">2670823</span><span class="p">,</span>
+    <span class="mi">2676813</span><span class="p">,</span>
+    <span class="mi">2693063</span><span class="p">,</span>
+    <span class="mi">2697347</span><span class="p">,</span>
+    <span class="mi">2702313</span><span class="p">,</span>
+    <span class="mi">2712108</span><span class="p">,</span>
+    <span class="mi">2712532</span><span class="p">,</span>
+    <span class="mi">2712549</span><span class="p">,</span>
+    <span class="mi">2712608</span><span class="p">,</span>
+    <span class="mi">2713686</span><span class="p">,</span>
+    <span class="mi">2713850</span><span class="p">,</span>
+    <span class="mi">2726440</span><span class="p">,</span>
+    <span class="mi">2729046</span><span class="p">,</span>
+    <span class="mi">2738268</span><span class="p">,</span>
+    <span class="mi">2739884</span><span class="p">,</span>
+    <span class="mi">2741117</span><span class="p">,</span>
+    <span class="mi">2772166</span><span class="p">,</span>
+    <span class="mi">2784353</span><span class="p">,</span>
+    <span class="mi">2784616</span><span class="p">,</span>
+    <span class="mi">2785618</span><span class="p">,</span>
+    <span class="mi">2788500</span><span class="p">,</span>
+    <span class="mi">2792223</span><span class="p">,</span>
+    <span class="mi">2792790</span><span class="p">,</span>
+    <span class="mi">2823065</span><span class="p">,</span>
+    <span class="mi">2883551</span><span class="p">,</span>
+    <span class="mi">2886553</span><span class="p">,</span>
+    <span class="mi">2963099</span><span class="p">,</span>
+    <span class="mi">2969363</span><span class="p">,</span>
+    <span class="mi">2972940</span><span class="p">,</span>
+    <span class="mi">2994736</span><span class="p">,</span>
+    <span class="mi">3134360</span><span class="p">,</span>
+    <span class="mi">3192709</span><span class="p">,</span>
+    <span class="mi">3193734</span><span class="p">,</span>
+    <span class="mi">3202674</span><span class="p">,</span>
+    <span class="mi">3285022</span><span class="p">,</span>
+    <span class="mi">3293824</span><span class="p">,</span>
+    <span class="mi">1416907</span><span class="p">,</span>
+    <span class="mi">2493664</span><span class="p">,</span>
+    <span class="mi">2985934</span><span class="p">,</span>
+    <span class="mi">2985935</span><span class="p">,</span>
+    <span class="mi">2493587</span><span class="p">,</span>
+    <span class="mi">1803522</span><span class="p">,</span>
+    <span class="mi">2755125</span><span class="p">,</span>
+    <span class="mi">2714814</span><span class="p">,</span>
+    <span class="mi">2500300</span><span class="p">,</span>
+    <span class="mi">2985933</span><span class="p">,</span>
+    <span class="mi">3108309</span><span class="p">,</span>
+    <span class="mi">3108308</span><span class="p">,</span>
+    <span class="mi">2884705</span><span class="p">,</span>
+    <span class="mi">2275400</span><span class="p">,</span>
+    <span class="mi">3229667</span><span class="p">,</span>
+    <span class="mi">1803502</span><span class="p">,</span>
+    <span class="mi">1803512</span><span class="p">,</span>
+    <span class="mi">2275489</span><span class="p">,</span>
+    <span class="mi">2985932</span><span class="p">,</span>
+    <span class="mi">2981982</span><span class="p">,</span>
+    <span class="mi">1832463</span><span class="p">,</span>
+    <span class="mi">1971745</span><span class="p">,</span>
+    <span class="mi">1770999</span><span class="p">,</span>
+    <span class="mi">2318436</span><span class="p">,</span>
+    <span class="mi">2096954</span><span class="p">,</span>
+    <span class="mi">3181534</span><span class="p">,</span>
+    <span class="mi">3181535</span><span class="p">,</span>
+    <span class="mi">3181536</span><span class="p">,</span>
+    <span class="mi">3245632</span><span class="p">,</span>
+    <span class="mi">2970259</span><span class="p">,</span>
+    <span class="mi">3204670</span><span class="p">,</span>
+    <span class="mi">3509035</span><span class="p">,</span>
+    <span class="mi">3208365</span><span class="p">,</span>
+    <span class="mi">2662378</span><span class="p">,</span>
+    <span class="mi">3383599</span><span class="p">,</span>
+    <span class="mi">3371597</span><span class="p">,</span>
+    <span class="mi">3383599</span><span class="p">,</span>
+    <span class="mi">2247002</span><span class="p">,</span>
+    <span class="mi">3371597</span><span class="p">,</span>
+    <span class="mi">2506864</span><span class="p">,</span>
+    <span class="mi">1906584</span><span class="p">,</span>
+    <span class="mi">2750249</span><span class="p">,</span>
+    <span class="mi">2410509</span><span class="p">,</span>
+    <span class="mi">742749</span><span class="p">,</span>
+    <span class="mi">3059271</span><span class="p">,</span>
+    <span class="mi">2508695</span><span class="p">,</span>
+    <span class="mi">3352422</span><span class="p">,</span>
+    <span class="mi">3150089</span><span class="p">,</span>
+    <span class="mi">2555245</span><span class="p">,</span>
+    <span class="mi">3208436</span><span class="p">,</span>
+    <span class="mi">2884408</span><span class="p">,</span>
+    <span class="mi">2786980</span><span class="p">,</span>
+    <span class="mi">2544222</span><span class="p">,</span>
+    <span class="mi">2686721</span><span class="p">,</span>
+    <span class="mi">3287286</span><span class="p">,</span>
+    <span class="mi">2987092</span><span class="p">,</span>
+    <span class="mi">3238720</span><span class="p">,</span>
+    <span class="mi">3393392</span><span class="p">,</span>
+    <span class="mi">3466158</span><span class="p">,</span>
+    <span class="mi">2599355</span><span class="p">,</span>
+    <span class="mi">1579122</span><span class="p">,</span>
+    <span class="mi">2771545</span>
+  <span class="p">)</span>
+<span class="k">order</span> <span class="k">by</span>
+  <span class="n">creation_date</span>
 </pre></div>
 </div>
 </div>
