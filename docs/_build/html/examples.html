@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -38,8 +41,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Miscellaneous Links and Information" href="misc.html" />
-    <link rel="prev" title="Static SQL Queries" href="static_queries.html" /> 
+    <link rel="next" title="Miscellaneous Links &amp; Information" href="misc.html" />
+    <link rel="prev" title="Static SQL Queries &amp; Reports" href="static_queries.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,16 +91,17 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="static_queries.html">Static SQL Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="static_queries.html">Static SQL Queries &amp; Reports</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples and Uses</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#bib-and-item-tables"><code class="docutils literal notranslate"><span class="pre">bib</span></code> and <code class="docutils literal notranslate"><span class="pre">item</span></code> Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#full-text-search">Full Text Search</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#limit-to-active-items">Limit to “active” Items</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#aggregate-counts">Aggregate Counts</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous Links and Information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous Links &amp; Information</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="database_tables.html">Database Tables, Columns, and Definitions</a></li>
@@ -165,10 +169,10 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="misc.html" class="btn btn-neutral float-right" title="Miscellaneous Links and Information" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="misc.html" class="btn btn-neutral float-right" title="Miscellaneous Links &amp; Information" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
       
       
-        <a href="static_queries.html" class="btn btn-neutral float-left" title="Static SQL Queries" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="static_queries.html" class="btn btn-neutral float-left" title="Static SQL Queries &amp; Reports" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
       
   </div>
   
@@ -492,6 +496,49 @@ location (<code class="docutils literal notranslate"><span class="pre">1cjbd</sp
 </tbody>
 </table>
 </div>
+<div class="section" id="full-text-search">
+<h2>Full Text Search<a class="headerlink" href="#full-text-search" title="Permalink to this headline">¶</a></h2>
+<p>It’s possible to use a feature called “Full Text Search” or “FTS” with the bib data. Below is an example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">fts_search</span> <span class="k">as</span> <span class="p">(</span>
+  <span class="k">select</span>
+    <span class="n">rowid</span><span class="p">,</span>
+    <span class="n">rank</span>
+  <span class="k">from</span>
+    <span class="n">bib_fts</span>
+  <span class="k">where</span>
+    <span class="n">bib_fts</span> <span class="k">match</span> <span class="p">:</span><span class="k">search</span>
+<span class="p">)</span>
+<span class="k">select</span>
+  <span class="p">(</span>
+    <span class="k">select</span>
+      <span class="k">sum</span><span class="p">(</span><span class="n">checkout_total</span><span class="p">)</span>
+    <span class="k">from</span>
+      <span class="n">item</span>
+    <span class="k">where</span>
+      <span class="n">item</span><span class="p">.</span><span class="n">bib_record_num</span> <span class="o">=</span> <span class="n">bib</span><span class="p">.</span><span class="n">bib_record_num</span>
+  <span class="p">)</span> <span class="k">as</span> <span class="n">checkouts_total</span><span class="p">,</span>
+  <span class="n">bib_record_num</span><span class="p">,</span>
+  <span class="s1">&#39;https://cincinnatilibrary.bibliocommons.com/item/show/&#39;</span> <span class="o">||</span> <span class="n">bib_record_num</span> <span class="o">||</span> <span class="s1">&#39;170&#39;</span> <span class="k">as</span> <span class="n">catalog_link</span><span class="p">,</span>
+  <span class="n">creation_date</span><span class="p">,</span>
+  <span class="n">record_last_updated</span><span class="p">,</span>
+  <span class="n">isbn</span><span class="p">,</span>
+  <span class="n">best_author</span><span class="p">,</span>
+  <span class="n">best_title</span><span class="p">,</span>
+  <span class="n">publisher</span><span class="p">,</span>
+  <span class="n">publish_year</span><span class="p">,</span>
+  <span class="n">bib_level_callnumber</span><span class="p">,</span>
+  <span class="n">indexed_subjects</span>
+<span class="k">from</span>
+  <span class="n">fts_search</span>
+  <span class="k">join</span> <span class="n">bib</span> <span class="k">on</span> <span class="n">bib</span><span class="p">.</span><span class="n">rowid</span> <span class="o">=</span> <span class="n">fts_search</span><span class="p">.</span><span class="n">rowid</span>
+<span class="k">order</span> <span class="k">by</span>
+  <span class="n">rank</span>
+</pre></div>
+</div>
+<p>Using FTS values, <code class="docutils literal notranslate"><span class="pre">&quot;black</span> <span class="pre">lives</span> <span class="pre">matter&quot;</span> <span class="pre">NOT</span> <span class="pre">(&quot;fiction&quot;</span> <span class="pre">OR</span> <span class="pre">&quot;fictitious&quot;)</span></code>, for example, you can build useful searches across the bib (title) text data and extract extra item information as well. Below is the link for this particular search.</p>
+<p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-87a9011?sql=with+fts_search+as+%28%0D%0A++select%0D%0A++++rowid%2C%0D%0A++++rank%0D%0A++from%0D%0A++++bib_fts%0D%0A++where%0D%0A++++bib_fts+match+%3Asearch%0D%0A%29%0D%0Aselect%0D%0A++%28%0D%0A++++select%0D%0A++++++sum%28checkout_total%29%0D%0A++++from%0D%0A++++++item%0D%0A++++where%0D%0A++++++item.bib_record_num+%3D+bib.bib_record_num%0D%0A++%29+as+checkouts_total%2C%0D%0A++bib_record_num%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+bib_record_num+%7C%7C+%27170%27+as+catalog_link%2C%0D%0A++creation_date%2C%0D%0A++record_last_updated%2C%0D%0A++isbn%2C%0D%0A++best_author%2C%0D%0A++best_title%2C%0D%0A++publisher%2C%0D%0A++publish_year%2C%0D%0A++bib_level_callnumber%2C%0D%0A++indexed_subjects%0D%0Afrom%0D%0A++fts_search%0D%0A++join+bib+on+bib.rowid+%3D+fts_search.rowid%0D%0Aorder+by%0D%0A++rank&amp;search=%22black+lives+matter%22+NOT+%28%22fiction%22+OR+%22fictitious%22%29">“current-collection” FTS example</a></p>
+<p>More details on syntax of the sqlite FTS feature can be found here <a class="reference external" href="https://www.sqlite.org/fts5.html#full_text_query_syntax">https://www.sqlite.org/fts5.html#full_text_query_syntax</a></p>
+</div>
 <div class="section" id="limit-to-active-items">
 <h2>Limit to “active” Items<a class="headerlink" href="#limit-to-active-items" title="Permalink to this headline">¶</a></h2>
 <p>In certain circumstances, you may want to limit a search to “active” items only.
@@ -674,8 +721,8 @@ system considers “active”.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="misc.html" class="btn btn-neutral float-right" title="Miscellaneous Links and Information" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="static_queries.html" class="btn btn-neutral float-left" title="Static SQL Queries" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="misc.html" class="btn btn-neutral float-right" title="Miscellaneous Links &amp; Information" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="static_queries.html" class="btn btn-neutral float-left" title="Static SQL Queries &amp; Reports" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

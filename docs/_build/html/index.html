@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -213,6 +216,7 @@ To find the number of total titles that have at least a single item associated w
 <li class="toctree-l2"><a class="reference internal" href="static_queries.html#collection-value">Collection Value</a></li>
 <li class="toctree-l2"><a class="reference internal" href="static_queries.html#available-items-circulation-information-by-location-at-branch">Available Items &amp; Circulation Information By Location at Branch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="static_queries.html#lucky-day-leased-books-and-leased-dvds-analysis">Lucky Day Leased Books and Leased DVDs Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#items-with-0-circulation-by-branch-name-including-pagination">Items with 0 Circulation by branch_name (including pagination)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="static_queries.html#item-data-consistency-report-excluded-titles">Item Data Consistency Report – Excluded Titles</a></li>
 </ul>
 </li>
@@ -244,8 +248,23 @@ To find the number of total titles that have at least a single item associated w
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="database_tables.html">Database Tables, Columns, and Definitions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="database_tables.html#bib-table"><code class="docutils literal notranslate"><span class="pre">bib</span></code> Table</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database_tables.html#item-table"><code class="docutils literal notranslate"><span class="pre">item</span></code> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#bib-table-item-table-relationship"><strong>bib</strong> Table, <strong>item</strong> Table Relationship</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#bib-table"><strong>bib</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#item-table"><strong>item</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#bib-record-table"><strong>bib_record</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#item-status-property-myuser-table"><strong>item_status_property_myuser</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#itype-property-myuser-table"><strong>itype_property_myuser</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#physical-format-myuser-table"><strong>physical_format_myuser</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#country-property-myuser-table"><strong>country_property_myuser</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#language-property-table"><strong>language_property</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#record-metadata-table"><strong>record_metadata</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#bib-record-item-record-link-table"><strong>bib_record_item_record_link</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#location-table-location-name-table-branch-table-branch-name-table-relationship"><strong>location</strong> Table, <strong>location_name</strong> Table, <strong>branch</strong> Table, <strong>branch_name</strong> Table Relationship</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#location-table"><strong>location</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#location-name-table"><strong>location_name</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#branch-table"><strong>branch</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#branch-name-table"><strong>branch_name</strong> Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_tables.html#phrase-entry-table"><strong>phrase_entry</strong> Table</a></li>
 </ul>
 </li>
 </ul>

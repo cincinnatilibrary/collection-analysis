@@ -264,6 +264,83 @@ This report will produce a simple analysis of the Lucky Day Items (identified by
      avg_ld_item_age_days
 
 
+Items with 0 Circulation by branch_name (including pagination)
+--------------------------------------------------------------
+
+.. code-block:: sql 
+
+   -- items by branch with 0 checkouts by branch_name
+   with data as (
+     select
+       ROW_NUMBER() over (
+         order by
+           location_code,
+           item_callnumber,
+           best_author
+       ) as row_number,
+       item.item_record_num,
+       item.bib_record_num,
+       item.location_code,
+       item.item_format,
+       item.item_callnumber,
+       location_name.name as location_name,
+       branch_name.name as branch_name,
+       bib.best_author,
+       bib.best_title,
+       bib.publish_year,
+       item.creation_date as item_creation_date,
+       item.record_last_updated as item_last_updated,
+       item.price_cents,
+       date(bib_record.cataloging_date_gmt) as cat_date,
+       bib.isbn
+     from
+       item
+       join "location" on "location".code = item.location_code
+       join "location_name" on "location_name".location_id = "location".id
+       join "branch" on "branch".code_num = "location".branch_code_num
+       join "branch_name" on "branch_name".branch_id = "branch".id
+       join bib_record_item_record_link as l on l.item_record_num = item.item_record_num
+       join bib_record on (
+         bib_record.record_id = l.bib_record_id
+         and bib_record.cataloging_date_gmt is not null
+       )
+       join bib on bib.bib_record_num = item.bib_record_num
+     where
+       -- consider these status codes as availbale
+       item.item_status_code in (
+         '-',
+         '!',
+         'b',
+         'p',
+         '(',
+         '@',
+         ')',
+         '_',
+         '=',
+         '+',
+         't'
+       )
+       and checkout_total = 0
+       and "branch_name".name = :branch_name
+     order by
+       location_code,
+       item_callnumber,
+       best_author
+   )
+   select
+     (
+       select
+         max(row_number)
+       from
+         data
+     ) as row_total,
+     *
+   from
+     data
+   limit
+     3000 offset (:page_number * 1.0) * 3000
+     
+
 Item Data Consistency Report -- Excluded Titles
 -----------------------------------------------
 

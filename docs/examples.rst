@@ -118,6 +118,54 @@ If we wanted to include the bibliographic record data along with the item data, 
 +-----------------+----------------+---------------+---------------+-----------------+---------------------------------+----------------------------------------------------------------------------------------------------------------------+---------------+------------------+----------------+
 
 
+Full Text Search
+----------------
+
+It's possible to use a feature called "Full Text Search" or "FTS" with the bib data. Below is an example:
+
+.. code-block:: sql
+
+   with fts_search as (
+     select
+       rowid,
+       rank
+     from
+       bib_fts
+     where
+       bib_fts match :search
+   )
+   select
+     (
+       select
+         sum(checkout_total)
+       from
+         item
+       where
+         item.bib_record_num = bib.bib_record_num
+     ) as checkouts_total,
+     bib_record_num,
+     'https://cincinnatilibrary.bibliocommons.com/item/show/' || bib_record_num || '170' as catalog_link,
+     creation_date,
+     record_last_updated,
+     isbn,
+     best_author,
+     best_title,
+     publisher,
+     publish_year,
+     bib_level_callnumber,
+     indexed_subjects
+   from
+     fts_search
+     join bib on bib.rowid = fts_search.rowid
+   order by
+     rank
+
+Using FTS values, ``"black lives matter" NOT ("fiction" OR "fictitious")``, for example, you can build useful searches across the bib (title) text data and extract extra item information as well. Below is the link for this particular search.
+
+`"current-collection" FTS example <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-87a9011?sql=with+fts_search+as+%28%0D%0A++select%0D%0A++++rowid%2C%0D%0A++++rank%0D%0A++from%0D%0A++++bib_fts%0D%0A++where%0D%0A++++bib_fts+match+%3Asearch%0D%0A%29%0D%0Aselect%0D%0A++%28%0D%0A++++select%0D%0A++++++sum%28checkout_total%29%0D%0A++++from%0D%0A++++++item%0D%0A++++where%0D%0A++++++item.bib_record_num+%3D+bib.bib_record_num%0D%0A++%29+as+checkouts_total%2C%0D%0A++bib_record_num%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+bib_record_num+%7C%7C+%27170%27+as+catalog_link%2C%0D%0A++creation_date%2C%0D%0A++record_last_updated%2C%0D%0A++isbn%2C%0D%0A++best_author%2C%0D%0A++best_title%2C%0D%0A++publisher%2C%0D%0A++publish_year%2C%0D%0A++bib_level_callnumber%2C%0D%0A++indexed_subjects%0D%0Afrom%0D%0A++fts_search%0D%0A++join+bib+on+bib.rowid+%3D+fts_search.rowid%0D%0Aorder+by%0D%0A++rank&search=%22black+lives+matter%22+NOT+%28%22fiction%22+OR+%22fictitious%22%29>`_ 
+
+More details on syntax of the sqlite FTS feature can be found here `<https://www.sqlite.org/fts5.html#full_text_query_syntax>`_
+
 Limit to "active" Items
 -----------------------------------
 
