@@ -1,0 +1,34 @@
+/*
+.CodeMirror {
+  resize: vertical;
+  overflow: auto !important;
+} 
+*/
+
+header {
+  background-image: url('CHPL_Brandmark_color_white_cropped_311.png');
+  background-size: 200px;
+  background-repeat: no-repeat;
+  min-height: 200px;
+  /*background-color: #0f232f;*/
+  /*background-color: #3184b7;*/
+  background-color: #0C2340;
+  background-position: bottom left;
+  background-position-x: 15px;
+  background-position-y: 55px;
+  
+}
+
+footer {
+	/*background-color: #0f232f;*/
+	background-color: #0C2340;
+}
+
+/* .content h1 {
+  border-left: 10px solid #34B78F;
+} */
+
+/* .page-header {
+  border-color: transparent !important;
+  padding-left: 10px;
+} */

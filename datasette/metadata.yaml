@@ -1,0 +1,229 @@
+title: |-
+  Current Collection Data Set
+description_html: |-
+  <p>The <a href="current_collection"><span style="color:#54AC8E;">"current_collection"</span></a>
+  dataset reprsents the current collection state for the Cincinnati & Hamilton County Public Library 
+  as of 2021-07-26</p>
+  <p>Documentation, Static Queries, and Reports can be found in the "data source"
+#  <a href="https://ilsweb.cincinnatilibrary.org/collection-analysis-docs/">https://ilsweb.cincinnatilibrary.org/collection-analysis-docs/</a>
+
+# data source: https://github.com/plch/collection-analysis
+source_url: https://ilsweb.cincinnatilibrary.org/collection-analysis-docs/
+# license_url: |-
+#   https://TODO/
+extra_css_urls: [/static/my.css]
+databases:
+  current_collection:
+    tables:
+      bib:
+        fts_table: bib_fts
+        search_mode: raw
+    queries:
+      location_code_branch_name_available_items:
+        select
+          i.location_code,
+          ln.name,
+          loc.branch_code_num,
+          bn.name as branch_name,
+          count(*) as count_available_items
+        from
+          item as i
+          left outer join location as loc on loc.code = i.location_code
+          left outer join location_name as ln on ln.location_id = loc.id
+          left outer join branch as br on br.code_num = loc.branch_code_num
+          left outer join branch_name as bn on bn.branch_id = br.id
+        where
+          i.item_status_code = '-'
+        group by
+          i.location_code,
+          ln.name,
+          loc.branch_code_num,
+          branch_name
+        order by
+          loc.branch_code_num
+
+      branch_code_num_names:
+        select
+          br.code_num,
+          bn.name
+
+        from
+          branch as br
+          join branch_name as bn on bn.branch_id = br.id
+      search_titles_by_multiple_subjects:
+        sql: |-
+          with bib_search as (
+          select
+          bib_record_num,
+          best_title,
+          best_author,
+          publish_year,
+          indexed_subjects
+          from
+          bib
+          where
+          indexed_subjects like trim(lower('%' || :subject1 || '%'))
+          and indexed_subjects like trim(lower('%' || :subject2 || '%'))
+          and indexed_subjects like trim(lower('%' || :subject3 || '%'))
+          )
+
+          select
+          b.best_title,
+          b.best_author,
+          cast (b.publish_year as integer) as publish_year,
+          b.indexed_subjects,
+          'https://cincinnatilibrary.bibliocommons.com/item/show/' || b.bib_record_num || '170' as catalog_link
+
+          from bib_search as b
+      find_locations_with_available_items_given_branch_code_num:
+        description: |-
+          Given a branch_code_num, finds all locations with available items and provides a count of those items
+
+        description_html: |-
+          <a href="branch_code_num_names">get a list of branch_code_num values here</a>
+        sql: |-
+          with location_data as (
+          select
+          i.location_code,
+          count(*) as count_available_items
+          from
+          item as i 
+          where
+          i.item_status_code = '-'
+          AND i.location_code in (
+          select
+          code
+          from
+          location as loc
+          where
+          loc.branch_code_num = :branch_code_num
+          )
+          group by
+          i.location_code
+          )
+          select
+          location_code,
+          (
+          select
+          ln.name
+          from
+          location as loc
+          left outer join location_name as ln on ln.location_id = loc.id
+          where
+          loc.code = d.location_code
+          ) as location_name,
+          count_available_items
+          from
+          location_data as d
+      top_circulating_by_subject:
+        sql: |-
+          SELECT
+          bib.best_title,
+          bib.best_author,
+          cast(bib.publish_year as integer) as publish_year,
+          sum(checkout_total + renewal_total) as total_circ,
+          'https://cincinnatilibrary.bibliocommons.com/item/show/' || bib.bib_record_num || '170' as catalog_link
+          from
+          bib
+          join item as i on i.bib_record_num = bib.bib_record_num
+          where
+          bib.bib_record_num in (
+          select
+          r.record_num
+          from
+          phrase_entry as e
+          join record_metadata as r on r.id = e.record_id
+          where
+          e.index_tag = 'd'
+          and index_entry LIKE lower('%' || :subject || '%')
+          )
+          group by
+          bib.best_title,
+          bib.best_author,
+          bib.publish_year,
+          bib.bib_record_num
+          order by
+          total_circ DESC
+      item_lookup_by_barcode:
+        sql: |-
+          select bib.*,
+          item.* 
+          from item
+          join
+          bib on bib.bib_record_num = item.bib_record_num
+          where
+          barcode = upper(trim(:barcode))
+    
+  sierra_view:
+    queries:
+      example_01_record_metadata:
+        sql: |-
+          SELECT
+          r.id,
+          r.record_type_code,
+          r.record_num,
+          r.creation_date_gmt
+          FROM
+          record_metadata as r
+          ORDER BY
+          r.id
+          LIMIT
+          5
+        title: |-
+          Example 01: record_metadata
+        description_html: |-
+          <a href="https://rayvoelker.github.io/intro_sql_now_what_presentation/index.html#/4">presentation link</a>
+          
+      example_02_bib_record_property:
+        sql: |-
+          SELECT
+          bp.id,
+          bp.bib_record_id,
+          bp.best_title,
+          bp.publish_year
+          FROM
+          bib_record_property as bp
+          ORDER BY
+          bp.id
+          LIMIT
+          5
+        title: |-
+          Example 02: bib_record_property
+        description_html: |-
+          <a href="https://rayvoelker.github.io/intro_sql_now_what_presentation/index.html#/5">presentation link</a>
+      search_popular_titles_by_subject:
+        sql: |-
+          select
+          p.best_title,
+          r.id as bib_record_id,
+          r.record_num as bib_record_num,
+          'https://cincinnatilibrary.bibliocommons.com/item/show/' || r.record_num || '170' as catalog_link,
+          (
+            select
+              sum(checkout_total) + sum(renewal_total)
+            from
+              bib_record_item_record_link as l
+              join item_record as i on i.record_id = l.item_record_id
+            where
+              l.bib_record_id = p.bib_record_id
+          ) as total_circulation
+          from
+            bib_record_property as p
+            join record_metadata as r on r.id = p.bib_record_id
+          where
+            p.bib_record_id in (
+              select
+                e.record_id
+              from
+                phrase_entry as e
+              where
+                e.index_tag = 'd'
+                and e.index_entry like '%' || trim(lower(:subject)) || '%'
+            )
+          order by
+            total_circulation DESC
+        title: |-
+          Search Titles by a Single-Subject Value
+        description_html: |-
+          <em>Input a single subject heading (or any part of one) into the field below to search for popular titles.
+          
