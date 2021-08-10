@@ -49,6 +49,7 @@ Bib Records Deleted Within the Last Week
 
 Item Records Deleted Within the Last Week
 -----------------------------------------
+
 `click to run Item Records Deleted Within the Last Week query <https://ilsweb.cincinnatilibrary.org/collection-analysis/_memory?sql=--+This+is+a+list+of+metadata+from+bib+records+that+have+been+deleted+in+the+previouse+week%0D%0A--+NOTE%3A+page+numbers+start+at+0%2C+and+will+produce+a+max+of+3000+records+until+no+more+remain+to+populate+a+%22page%22%0D%0Awith+deleted_items+as+%28%0D%0A++select%0D%0A++++ip.item_record_num%2C%0D%0A++++ip.bib_record_num%2C%0D%0A++++ip.location_code%2C%0D%0A++++ip.item_callnumber%2C%0D%0A++++ip.item_format%2C%0D%0A++++ip.last_checkout_date%2C%0D%0A++++ip.checkout_total%2C%0D%0A++++ip.item_status_code%0D%0A++from%0D%0A++++collection_prev.item+as+ip%0D%0A++++left+outer+join+current_collection.item+as+ic+on+ic.item_record_num+%3D+ip.item_record_num%0D%0A++where%0D%0A++++ic.item_record_num+is+null%0D%0A%29%0D%0Aselect%0D%0A++di.%2A%2C%0D%0A++b.best_author%2C%0D%0A++b.best_title%2C%0D%0A++b.publish_year%2C%0D%0A++b.bib_level_callnumber%0D%0Afrom%0D%0A++deleted_items+as+di%0D%0A++left+outer+join+collection_prev.bib+as+b+on+b.bib_record_num+%3D+di.bib_record_num%0D%0Aorder+by%0D%0A++di.location_code%0D%0Alimit%0D%0A++3000+offset+%3Apage+%2A+3000&page=0&_hide_sql=1>`__
 
 .. code-block:: sql
@@ -190,7 +191,7 @@ Lucky Day Leased Books and Leased DVDs Analysis
 
 `click to run query on current_collection database <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection?sql=--+find+lucky+day+leased+books+and+leased+dvds%2C+and+provide+some+basic+statistics+around+those+items+grouped+by+title%0D%0Awith+ld_item_info+as+%28%0D%0A++select%0D%0A++++item.bib_record_num%2C%0D%0A++++price_cents%2C%0D%0A++++item.checkout_total%2C%0D%0A++++--+lucky+day+items+are+not+renewable%0D%0A++++--+item.renewal_total%2C%0D%0A++++item.item_status_code%2C%0D%0A++++item.creation_date%2C%0D%0A++++item.barcode%2C%0D%0A++++item.item_format%0D%0A++from%0D%0A++++item%0D%0A++where%0D%0A++++item.item_format+in+%28%27Leased+Book%27%2C+%27Leased+DVD%27%29%0D%0A++++and+lower%28item.barcode%29+LIKE+%22l%25%22%0D%0A%29%0D%0Aselect%0D%0A++bib.best_title%2C%0D%0A++bib.bib_record_num%2C%0D%0A++bib.creation_date+as+bib_creation_date%2C%0D%0A++%28%0D%0A++++select%0D%0A++++++COUNT%28%2A%29%0D%0A++++from%0D%0A++++++item%0D%0A++++where%0D%0A++++++item.bib_record_num+%3D+bib.bib_record_num%0D%0A++++++and+item.item_format+not+in+%28%27Leased+Book%27%2C+%27Leased+DVD%27%29%0D%0A++++limit%0D%0A++++++1%0D%0A++%29+as+count_non_ld_items%2C%0D%0A++%28%0D%0A++++select%0D%0A++++++sum%28checkout_total%29%0D%0A++++from%0D%0A++++++item%0D%0A++++where%0D%0A++++++item.bib_record_num+%3D+bib.bib_record_num%0D%0A++++++and+item.item_format+not+in+%28%27Leased+Book%27%2C+%27Leased+DVD%27%29%0D%0A++++limit%0D%0A++++++1%0D%0A++%29+as+total_non_ld_items_checkouts%2C%0D%0A++ld.item_format+as+ld_item_format%2C%0D%0A++round%28%0D%0A++++avg%28%0D%0A++++++%28julianday%28%27now%27%29+-+julianday%28ld.creation_date%29%29%0D%0A++++%29%2C%0D%0A++++1%0D%0A++%29+as+avg_ld_item_age_days%2C%0D%0A++count%28%2A%29+as+count_ld_items%2C%0D%0A++sum%28checkout_total%29+as+total_ld_items_checkouts%2C%0D%0A++sum%28price_cents%29+%2F+100.0+as+total_ld_items_price%2C%0D%0A++round%28%0D%0A++++%28sum%28price_cents%29+%2F+100.0%29+%2F+sum%28checkout_total%29%2C%0D%0A++++2%0D%0A++%29+as+cost_per_ld_checkout%0D%0Afrom%0D%0A++ld_item_info+as+ld%0D%0A++join+bib+on+bib.bib_record_num+%3D+ld.bib_record_num%0D%0Agroup+by%0D%0A++bib.best_title%2C%0D%0A++bib.bib_record_num%2C%0D%0A++bib.creation_date%2C%0D%0A++ld.item_format%0D%0Aorder+by%0D%0A++avg_ld_item_age_days&_hide_sql=1>`__
 
-This report will produce a simple analysis of the Lucky Day Items (identified by items with the item format ('Leased Book', 'Leased DVD') and item barcodes starting with the character `l`). The report is Title-based, and compiles the average age in days of linked items, total counts of linked items, total checkouts linked items, and a cost per item checkout (based on the item price).
+This report will produce a simple analysis of the Lucky Day Items (identified by items with the item format ('Leased Book', 'Leased DVD') and item barcodes starting with the character ``l``). The report is Title-based, and compiles the average age in days of linked items, total counts of linked items, total checkouts linked items, and a cost per item checkout (based on the item price).
 
 .. code-block:: sql
 
@@ -264,47 +265,140 @@ This report will produce a simple analysis of the Lucky Day Items (identified by
      avg_ld_item_age_days
 
 
+New Books List
+--------------
+
+This query can be modified to include new items by a supplied item_type value.
+
+It's also possible to modify the query to include information about the intended audience from the location code data
+
+New Titles by Item Type ...
+   
+`New Release DVDs <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=New+Release+DVDs>`__
+  
+`Book <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.%2A%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&item_format=Book&_hide_sql=1>`__
+  
+`Juvenile Book <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=Juvenile+Book>`__
+  
+`Teen Book <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=Teen+Book>`__
+  
+`Reference Book <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=Reference+Book>`__
+
+`DVD/Videocassette <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=DVD%2FVideocassette>`__
+
+`Music on CD <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=Music+on+CD>`__
+
+`Large Print Book <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=Large+Print+Book>`__
+
+`Book on CD <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=Book+on+CD>`__
+
+`Music Score <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=Music+Score>`__
+
+`LP Record <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=LP+Record>`__
+
+`Juvenile Book on CD <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=Juvenile+Book+on+CD>`__
+
+`Playaway <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=Playaway>`__
+
+`Juvenile Music on CD <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-d62f71a?sql=with+item_data+as+%28%0D%0A++with+date_data+as+%28%0D%0A++++select%0D%0A++++++--+consider+a+1+month+period+of+time+...%0D%0A++++++--+start+of+last+week+...+advance+to+next+monday%2C+subtract+5+weeks%0D%0A++++++date%28%27now%27%2C+%27weekday+1%27%2C+%27-35+days%27%29+as+start_date%0D%0A++%29%0D%0A++select%0D%0A++++item.item_format%2C%0D%0A++++--+TODO+maybe+consider+audience+here+from+the+location+code%0D%0A++++--+pad+the+code+so+we+can+examine+the+parts+later+...%0D%0A++++case%0D%0A++++++when+length%28item.location_code%29+%3D+5+then+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+4+then+%27+%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+3+then+%27++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+2+then+%27+++%27+%7C%7C+item.location_code%0D%0A++++++when+length%28item.location_code%29+%3D+1+then+%27++++%27+%7C%7C+item.location_code%0D%0A++++++else+null%0D%0A++++end+as+location_code%2C%0D%0A++++item.item_record_num%2C%0D%0A++++item.bib_record_num%2C%0D%0A++++bib_record.cataloging_date_gmt%0D%0A++from%0D%0A++++date_data%2C%0D%0A++++item%0D%0A++++join+bib_record_item_record_link+as+l+on+l.item_record_num+%3D+item.item_record_num%0D%0A++++join+bib_record+on+bib_record.record_id+%3D+l.bib_record_id%0D%0A++where%0D%0A++++item.item_format+%3D+%3Aitem_format%0D%0A++++and+bib_record.cataloging_date_gmt+%3E%3D+date_data.start_date%0D%0A%29%0D%0Aselect%0D%0A++item_data.item_format%2C%0D%0A++item_data.bib_record_num%2C%0D%0A++bib.best_author%2C%0D%0A++bib.best_title%2C%0D%0A++bib.publish_year%2C%0D%0A++count%28item_data.item_record_num%29+as+count_items%2C%0D%0A++%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fv2%2Frecord%2FS170C%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+as+catalog_link+--+this+was+the+previous+way+to+create+links+..%0D%0A++--+%27https%3A%2F%2Fcincinnatilibrary.bibliocommons.com%2Fitem%2Fshow%2F%27+%7C%7C+coalesce%28item_data.bib_record_num%2C+%27%27%29+%7C%7C+%27170%27+as+catalog_link+--+%2C+bib.*%0D%0Afrom%0D%0A++item_data%0D%0A++join+bib+on+bib.bib_record_num+%3D+item_data.bib_record_num%0D%0Agroup+by%0D%0A++item_data.bib_record_num%0D%0Aorder+by%0D%0A++bib.best_title&_hide_sql=1&item_format=Juvenile+Music+on+CD>`__
+
+.. code-block:: sql
+
+   with item_data as (
+     with date_data as (
+       select
+         -- consider a 1 month period of time ...
+         -- start of last week ... advance to next monday, subtract 5 weeks
+         date('now', 'weekday 1', '-35 days') as start_date
+     )
+     select
+       item.item_format,
+       -- TODO maybe consider audience here from the location code
+       -- pad the code so we can examine the parts later ...
+       case
+         when length(item.location_code) = 5 then item.location_code
+         when length(item.location_code) = 4 then ' ' || item.location_code
+         when length(item.location_code) = 3 then '  ' || item.location_code
+         when length(item.location_code) = 2 then '   ' || item.location_code
+         when length(item.location_code) = 1 then '    ' || item.location_code
+         else null
+       end as location_code,
+       item.item_record_num,
+       item.bib_record_num,
+       bib_record.cataloging_date_gmt
+     from
+       date_data,
+       item
+       join bib_record_item_record_link as l on l.item_record_num = item.item_record_num
+       join bib_record on bib_record.record_id = l.bib_record_id
+     where
+       item.item_format = :item_format
+       and bib_record.cataloging_date_gmt >= date_data.start_date
+   )
+   select
+     item_data.item_format,
+     item_data.bib_record_num,
+     bib.best_author,
+     bib.best_title,
+     bib.publish_year,
+     count(item_data.item_record_num) as count_items,
+     'https://cincinnatilibrary.bibliocommons.com/v2/record/S170C' || coalesce(item_data.bib_record_num, '') as catalog_link -- this was the previous way to create links ..
+     -- 'https://cincinnatilibrary.bibliocommons.com/item/show/' || coalesce(item_data.bib_record_num, '') || '170' as catalog_link -- , bib.*
+   from
+     item_data
+     join bib on bib.bib_record_num = item_data.bib_record_num
+   group by
+     item_data.bib_record_num
+   order by
+     bib.best_title
+
+
 Items with 0 Circulation by branch_name (including pagination)
 --------------------------------------------------------------
 
 .. code-block:: sql 
 
-   -- items by branch with 0 checkouts by branch_name
-   with data as (
+   -- items with 0 checkouts by given branch_name
+   with item_data as (
+     with locations as (
+       select
+         "location".code as location_code,
+         "location_name".name as location_name,
+         "branch_name".name as branch_name
+       from
+         "location"
+         join "location_name" on "location_name".location_id = "location".id
+         join "branch" on "branch".code_num = "location".branch_code_num
+         join "branch_name" on "branch_name".branch_id = "branch".id
+       where
+         "branch_name".name = :branch_name -- and "location".code = : location_code
+     )
      select
        ROW_NUMBER() over (
          order by
-           location_code,
-           item_callnumber,
-           best_author
-       ) as row_number,
+           item.location_code,
+           item.item_callnumber
+       ) as row_num,
        item.item_record_num,
        item.bib_record_num,
        item.location_code,
-       item.item_format,
+       locations.location_name as location_name,
        item.item_callnumber,
-       location_name.name as location_name,
-       branch_name.name as branch_name,
-       bib.best_author,
-       bib.best_title,
-       bib.publish_year,
+       item.item_format,
        item.creation_date as item_creation_date,
+       cast (
+         round(
+           (
+             julianday(date('now')) - julianday(date(item.creation_date))
+           ),
+           0
+         ) as integer
+       ) as item_age_days,
        item.record_last_updated as item_last_updated,
-       item.price_cents,
-       date(bib_record.cataloging_date_gmt) as cat_date,
-       bib.isbn
+       item.price_cents
      from
-       item
-       join "location" on "location".code = item.location_code
-       join "location_name" on "location_name".location_id = "location".id
-       join "branch" on "branch".code_num = "location".branch_code_num
-       join "branch_name" on "branch_name".branch_id = "branch".id
-       join bib_record_item_record_link as l on l.item_record_num = item.item_record_num
-       join bib_record on (
-         bib_record.record_id = l.bib_record_id
-         and bib_record.cataloging_date_gmt is not null
-       )
-       join bib on bib.bib_record_num = item.bib_record_num
+       locations
+       join item on item.location_code = locations.location_code
      where
        -- consider these status codes as availbale
        item.item_status_code in (
@@ -320,25 +414,39 @@ Items with 0 Circulation by branch_name (including pagination)
          '+',
          't'
        )
-       and checkout_total = 0
-       and "branch_name".name = :branch_name
+       and item.checkout_total = 0
      order by
-       location_code,
-       item_callnumber,
-       best_author
+       row_num
    )
    select
-     (
-       select
-         max(row_number)
-       from
-         data
-     ) as row_total,
-     *
+     row_num,
+     --  (
+     --    select
+     --      max(row_num)
+     --    from
+     --      item_data
+     --  ) as total_row_num,
+     item_data.item_record_num,
+     item_data.bib_record_num,
+     item_data.location_code,
+     item_data.location_name,
+     item_data.item_age_days,
+     item_data.item_format,
+     item_data.item_callnumber,
+     bib.best_author,
+     bib.best_title,
+     bib.publish_year,
+     bib.isbn,
+     item_data.item_creation_date,
+     item_data.item_last_updated,
+     item_data.price_cents
    from
-     data
+     item_data
+     join bib on bib.bib_record_num = item_data.bib_record_num
+   order by
+     row_num
    limit
-     3000 offset (:page_number * 1.0) * 3000
+     3000 offset (:page_num_from_zero * 3000)
      
 
 Item Data Consistency Report -- Excluded Titles
