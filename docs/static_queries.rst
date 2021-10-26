@@ -848,8 +848,6 @@ Titles with 100% items (active) checked out (by popularity--total items checkout
 
 `click to run query on current_collection database <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-fa3ee74?sql=--+titles+with+100%25+active+items+checked+out+%28by+popularity--total+items+checkouts%29%0D%0Awith+titles_with_active_items+as+%28%0D%0A++--+titles+with+active+items%0D%0A++select%0D%0A++++bib.bib_record_num%2C%0D%0A++++count%28item.item_record_num%29+as+total_items%2C%0D%0A++++count%28item.due_date%29+as+checked_out%2C%0D%0A++++sum%28item.checkout_total%29+as+sum_items_checkouts%2C%0D%0A++++min%28item.due_date%29+as+min_due_date%0D%0A++from%0D%0A++++bib%0D%0A++++join+item+on+item.bib_record_num+%3D+bib.bib_record_num%0D%0A++where%0D%0A++++--+these+are+the+status+codes+we+want+to+consider+for+items+as+being+%22active%22%0D%0A++++--+...+for+a+list+of+the+status+codes%2C+and+the+descriptive+names%2C+see+the+following+link%0D%0A++++--+https%3A%2F%2Filsweb.cincinnatilibrary.org%2Fcollection-analysis%2Fcurrent_collection%2Fitem_status_property_myuser%0D%0A++++item.item_status_code+in+%28%27-%27%2C+%27%21%27%2C+%27b%27%2C+%27p%27%2C+%27%28%27%2C+%27%40%27%2C+%27%29%27%2C+%27_%27%2C+%27%3D%27%2C+%27%2B%27%29%0D%0A++group+by%0D%0A++++bib.bib_record_num%0D%0A%29%0D%0Aselect%0D%0A++t.*%2C%0D%0A++bib.best_title%2C%0D%0A++bib.best_author%2C%0D%0A++bib.publish_year%2C%0D%0A++bib.bib_level_callnumber%2C%0D%0A++bib.creation_date%0D%0Afrom%0D%0A++titles_with_active_items+as+t%0D%0A++join+bib+on+bib.bib_record_num+%3D+t.bib_record_num%0D%0Awhere%0D%0A++t.total_items+%3D+t.checked_out%0D%0Aorder+by%0D%0A++sum_items_checkouts+DESC%0D%0Alimit%0D%0A++3000+offset+%28%3Apage%29+*+3000&page=0>`__
 
-
-
 .. code-block:: sql
 
    -- titles with 100% active items checked out (by popularity--total items checkouts)
@@ -888,3 +886,75 @@ Titles with 100% items (active) checked out (by popularity--total items checkout
      sum_items_checkouts DESC
    limit
      3000 offset (:page) * 3000
+
+
+Percent Total Items Checked Out by Location at Branch (given branch code)
+-------------------------------------------------------------------------
+
+`click to run query on current_collection database <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-fa3ee74?sql=--+titles+with+100%25+active+items+checked+out+%28by+popularity--total+items+checkouts%29%0D%0Awith+titles_with_active_items+as+%28%0D%0A++--+titles+with+active+items%0D%0A++select%0D%0A++++bib.bib_record_num%2C%0D%0A++++count%28item.item_record_num%29+as+total_items%2C%0D%0A++++count%28item.due_date%29+as+checked_out%2C%0D%0A++++sum%28item.checkout_total%29+as+sum_items_checkouts%2C%0D%0A++++min%28item.due_date%29+as+min_due_date%0D%0A++from%0D%0A++++bib%0D%0A++++join+item+on+item.bib_record_num+%3D+bib.bib_record_num%0D%0A++where%0D%0A++++--+these+are+the+status+codes+we+want+to+consider+for+items+as+being+%22active%22%0D%0A++++--+...+for+a+list+of+the+status+codes%2C+and+the+descriptive+names%2C+see+the+following+link%0D%0A++++--+https%3A%2F%2Filsweb.cincinnatilibrary.org%2Fcollection-analysis%2Fcurrent_collection%2Fitem_status_property_myuser%0D%0A++++item.item_status_code+in+%28%27-%27%2C+%27%21%27%2C+%27b%27%2C+%27p%27%2C+%27%28%27%2C+%27%40%27%2C+%27%29%27%2C+%27_%27%2C+%27%3D%27%2C+%27%2B%27%29%0D%0A++group+by%0D%0A++++bib.bib_record_num%0D%0A%29%0D%0Aselect%0D%0A++t.*%2C%0D%0A++bib.best_title%2C%0D%0A++bib.best_author%2C%0D%0A++bib.publish_year%2C%0D%0A++bib.bib_level_callnumber%2C%0D%0A++bib.creation_date%0D%0Afrom%0D%0A++titles_with_active_items+as+t%0D%0A++join+bib+on+bib.bib_record_num+%3D+t.bib_record_num%0D%0Awhere%0D%0A++t.total_items+%3D+t.checked_out%0D%0Aorder+by%0D%0A++sum_items_checkouts+DESC%0D%0Alimit%0D%0A++3000+offset+%28%3Apage%29+*+3000&page=0>`__
+
+.. code-block:: sql
+
+   with data as (
+     select
+       i.location_code,
+       ln.name,
+       -- loc.branch_code_num,
+       -- bn.name as branch_name,
+       count(*) as count_total_available_items,
+       (
+         select
+           count(*)
+         from
+           item as i2
+         where
+           i2.location_code = i.location_code
+           and i2.item_status_code = '-'
+           and i2.checkout_total = 0
+       ) as count_items_0_checkouts,
+       (
+         select
+           count(*)
+         from
+           item as i2
+         where
+           i2.location_code = i.location_code
+           and i2.item_status_code = '-'
+           and i2.checkout_total > 0
+       ) as count_items_gt_0_checkouts,
+       (
+         select
+           count(*)
+         from
+           item as i2
+         where
+           i2.location_code = i.location_code
+           and i2.item_status_code = '-'
+           and i2.checkout_date is not null
+       ) as count_curr_checked_out
+     from
+       item as i
+       left outer join location as loc on loc.code = i.location_code
+       left outer join location_name as ln on ln.location_id = loc.id
+       left outer join branch as br on br.code_num = loc.branch_code_num
+       left outer join branch_name as bn on bn.branch_id = br.id
+     where
+       i.item_status_code = '-'
+       and br.code_num = :branch_code_num
+     group by
+       i.location_code,
+       ln.name -- loc.branch_code_num,
+       -- branch_name
+     order by
+       loc.branch_code_num
+   )
+   select
+     *,
+     round(
+       (
+         (data.count_curr_checked_out * 1.0) / (data.count_total_available_items * 1.0)
+       ) * 100.0,
+       2
+     ) as pct_tot_curr_checked_out
+   from
+     data
