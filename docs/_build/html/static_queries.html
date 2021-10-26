@@ -100,6 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#new-books-list">New Books List</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#items-with-0-circulation-by-branch-name-including-pagination">Items with 0 Circulation by branch_name (including pagination)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#item-data-consistency-report-excluded-titles">Item Data Consistency Report – Excluded Titles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#titles-with-100-items-active-checked-out-by-popularity-total-items-checkouts">Titles with 100% items (active) checked out (by popularity–total items checkouts)</a></li>
 </ul>
 </li>
 </ul>
@@ -201,6 +202,7 @@
 <li><p><a class="reference internal" href="#new-books-list" id="id7">New Books List</a></p></li>
 <li><p><a class="reference internal" href="#items-with-0-circulation-by-branch-name-including-pagination" id="id8">Items with 0 Circulation by branch_name (including pagination)</a></p></li>
 <li><p><a class="reference internal" href="#item-data-consistency-report-excluded-titles" id="id9">Item Data Consistency Report – Excluded Titles</a></p></li>
+<li><p><a class="reference internal" href="#titles-with-100-items-active-checked-out-by-popularity-total-items-checkouts" id="id10">Titles with 100% items (active) checked out (by popularity–total items checkouts)</a></p></li>
 </ul>
 </li>
 </ul>
@@ -998,6 +1000,48 @@
   <span class="p">)</span>
 <span class="k">order</span> <span class="k">by</span>
   <span class="n">creation_date</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="titles-with-100-items-active-checked-out-by-popularity-total-items-checkouts">
+<h2><a class="toc-backref" href="#id10">Titles with 100% items (active) checked out (by popularity–total items checkouts)</a><a class="headerlink" href="#titles-with-100-items-active-checked-out-by-popularity-total-items-checkouts" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-fa3ee74?sql=--+titles+with+100%25+active+items+checked+out+%28by+popularity--total+items+checkouts%29%0D%0Awith+titles_with_active_items+as+%28%0D%0A++--+titles+with+active+items%0D%0A++select%0D%0A++++bib.bib_record_num%2C%0D%0A++++count%28item.item_record_num%29+as+total_items%2C%0D%0A++++count%28item.due_date%29+as+checked_out%2C%0D%0A++++sum%28item.checkout_total%29+as+sum_items_checkouts%2C%0D%0A++++min%28item.due_date%29+as+min_due_date%0D%0A++from%0D%0A++++bib%0D%0A++++join+item+on+item.bib_record_num+%3D+bib.bib_record_num%0D%0A++where%0D%0A++++--+these+are+the+status+codes+we+want+to+consider+for+items+as+being+%22active%22%0D%0A++++--+...+for+a+list+of+the+status+codes%2C+and+the+descriptive+names%2C+see+the+following+link%0D%0A++++--+https%3A%2F%2Filsweb.cincinnatilibrary.org%2Fcollection-analysis%2Fcurrent_collection%2Fitem_status_property_myuser%0D%0A++++item.item_status_code+in+%28%27-%27%2C+%27%21%27%2C+%27b%27%2C+%27p%27%2C+%27%28%27%2C+%27%40%27%2C+%27%29%27%2C+%27_%27%2C+%27%3D%27%2C+%27%2B%27%29%0D%0A++group+by%0D%0A++++bib.bib_record_num%0D%0A%29%0D%0Aselect%0D%0A++t.*%2C%0D%0A++bib.best_title%2C%0D%0A++bib.best_author%2C%0D%0A++bib.publish_year%2C%0D%0A++bib.bib_level_callnumber%2C%0D%0A++bib.creation_date%0D%0Afrom%0D%0A++titles_with_active_items+as+t%0D%0A++join+bib+on+bib.bib_record_num+%3D+t.bib_record_num%0D%0Awhere%0D%0A++t.total_items+%3D+t.checked_out%0D%0Aorder+by%0D%0A++sum_items_checkouts+DESC%0D%0Alimit%0D%0A++3000+offset+%28%3Apage%29+*+3000&amp;page=0">click to run query on current_collection database</a></p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- titles with 100% active items checked out (by popularity--total items checkouts)</span>
+<span class="k">with</span> <span class="n">titles_with_active_items</span> <span class="k">as</span> <span class="p">(</span>
+  <span class="c1">-- titles with active items</span>
+  <span class="k">select</span>
+    <span class="n">bib</span><span class="p">.</span><span class="n">bib_record_num</span><span class="p">,</span>
+    <span class="k">count</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">item_record_num</span><span class="p">)</span> <span class="k">as</span> <span class="n">total_items</span><span class="p">,</span>
+    <span class="k">count</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">due_date</span><span class="p">)</span> <span class="k">as</span> <span class="n">checked_out</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">checkout_total</span><span class="p">)</span> <span class="k">as</span> <span class="n">sum_items_checkouts</span><span class="p">,</span>
+    <span class="k">min</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">due_date</span><span class="p">)</span> <span class="k">as</span> <span class="n">min_due_date</span>
+  <span class="k">from</span>
+    <span class="n">bib</span>
+    <span class="k">join</span> <span class="n">item</span> <span class="k">on</span> <span class="n">item</span><span class="p">.</span><span class="n">bib_record_num</span> <span class="o">=</span> <span class="n">bib</span><span class="p">.</span><span class="n">bib_record_num</span>
+  <span class="k">where</span>
+    <span class="c1">-- these are the status codes we want to consider for items as being &quot;active&quot;</span>
+    <span class="c1">-- ... for a list of the status codes, and the descriptive names, see the following link</span>
+    <span class="c1">-- https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection/item_status_property_myuser</span>
+    <span class="n">item</span><span class="p">.</span><span class="n">item_status_code</span> <span class="k">in</span> <span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;!&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;(&#39;</span><span class="p">,</span> <span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span><span class="p">)</span>
+  <span class="k">group</span> <span class="k">by</span>
+    <span class="n">bib</span><span class="p">.</span><span class="n">bib_record_num</span>
+<span class="p">)</span>
+<span class="k">select</span>
+  <span class="n">t</span><span class="p">.</span><span class="o">*</span><span class="p">,</span>
+  <span class="n">bib</span><span class="p">.</span><span class="n">best_title</span><span class="p">,</span>
+  <span class="n">bib</span><span class="p">.</span><span class="n">best_author</span><span class="p">,</span>
+  <span class="n">bib</span><span class="p">.</span><span class="n">publish_year</span><span class="p">,</span>
+  <span class="n">bib</span><span class="p">.</span><span class="n">bib_level_callnumber</span><span class="p">,</span>
+  <span class="n">bib</span><span class="p">.</span><span class="n">creation_date</span>
+<span class="k">from</span>
+  <span class="n">titles_with_active_items</span> <span class="k">as</span> <span class="n">t</span>
+  <span class="k">join</span> <span class="n">bib</span> <span class="k">on</span> <span class="n">bib</span><span class="p">.</span><span class="n">bib_record_num</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">bib_record_num</span>
+<span class="k">where</span>
+  <span class="n">t</span><span class="p">.</span><span class="n">total_items</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">checked_out</span>
+<span class="k">order</span> <span class="k">by</span>
+  <span class="n">sum_items_checkouts</span> <span class="k">DESC</span>
+<span class="k">limit</span>
+  <span class="mi">3000</span> <span class="k">offset</span> <span class="p">(:</span><span class="n">page</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3000</span>
 </pre></div>
 </div>
 </div>
