@@ -41,7 +41,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Static SQL Queries &amp; Reports" href="static_queries.html" /> 
+    <link rel="next" title="Database Tables, Columns, and Definitions" href="database_tables.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,14 +90,11 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="static_queries.html">Static SQL Queries &amp; Reports</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples and Uses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous Links &amp; Information</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="database_tables.html">Database Tables, Columns, and Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="static_queries.html">Static SQL Queries &amp; Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="static_queries_holds.html">Static SQL Queries &amp; Reports: Holds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous Links &amp; Information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples and Uses</a></li>
 </ul>
 
             
@@ -162,7 +159,7 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="static_queries.html" class="btn btn-neutral float-right" title="Static SQL Queries &amp; Reports" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="database_tables.html" class="btn btn-neutral float-right" title="Database Tables, Columns, and Definitions" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
       
       
   </div>
@@ -208,30 +205,11 @@ To find the number of total titles that have at least a single item associated w
 <p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection?sql=select%0D%0A++count%28distinct+b.bib_record_num%29%0D%0Afrom%0D%0A++bib+as+b%0D%0A++join+item+as+i+on+i.bib_record_num+%3D+b.bib_record_num">Click to Run this query on the “current_collection” snapshot database</a></p>
 <p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/collection-2021-01-04-6a32a78?sql=select%0D%0A++count%28distinct+b.bib_record_num%29%0D%0Afrom%0D%0A++bib+as+b%0D%0A++join+item+as+i+on+i.bib_record_num+%3D+b.bib_record_num">Click to Run this query on the “collection-2021-01-04” snapshot database</a></p>
 <p>Below are static SQL queries for reports and analysis</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="static_queries.html">Static SQL Queries &amp; Reports</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="static_queries.html#bib-records-deleted-within-the-last-week">Bib Records Deleted Within the Last Week</a></li>
-<li class="toctree-l2"><a class="reference internal" href="static_queries.html#item-records-deleted-within-the-last-week">Item Records Deleted Within the Last Week</a></li>
-<li class="toctree-l2"><a class="reference internal" href="static_queries.html#collection-value">Collection Value</a></li>
-<li class="toctree-l2"><a class="reference internal" href="static_queries.html#available-items-circulation-information-by-location-at-branch">Available Items &amp; Circulation Information By Location at Branch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="static_queries.html#lucky-day-leased-books-and-leased-dvds-analysis">Lucky Day Leased Books and Leased DVDs Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="static_queries.html#new-books-list">New Books List</a></li>
-<li class="toctree-l2"><a class="reference internal" href="static_queries.html#items-with-0-circulation-by-branch-name-including-pagination">Items with 0 Circulation by branch_name (including pagination)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="static_queries.html#item-data-consistency-report-excluded-titles">Item Data Consistency Report – Excluded Titles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="static_queries.html#titles-with-100-items-active-checked-out-by-popularity-total-items-checkouts">Titles with 100% items (active) checked out (by popularity–total items checkouts)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="static_queries.html#percent-total-items-checked-out-by-location-at-branch-given-branch-code">Percent Total Items Checked Out by Location at Branch (given branch code)</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<p><a class="reference internal" href="static_queries.html"><span class="doc">Static SQL Queries &amp; Reports</span></a></p>
+<p><a class="reference internal" href="static_queries_holds.html"><span class="doc">Static SQL Queries &amp; Reports: Holds</span></a></p>
 <p>More examples, general use-cases and miscellaneous information can be found below.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples and Uses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous Links &amp; Information</a></li>
-</ul>
-</div>
+<p><a class="reference internal" href="examples.html"><span class="doc">Examples and Uses</span></a></p>
+<p><a class="reference internal" href="misc.html"><span class="doc">Miscellaneous Links &amp; Information</span></a></p>
 </div>
 <div class="section" id="what-is-included-in-the-data-set">
 <h2>What is Included in the Data Set?<a class="headerlink" href="#what-is-included-in-the-data-set" title="Permalink to this headline">¶</a></h2>
@@ -248,6 +226,24 @@ To find the number of total titles that have at least a single item associated w
 <li><p><code class="docutils literal notranslate"><span class="pre">item</span></code>: Item-level metadata (such as item location, barcode, etc.)</p></li>
 </ol>
 <p>More detail about what is included in each of the database snapshots can be found below.</p>
+<dl class="field-list simple">
+<dt class="field-odd">doc</dt>
+<dd class="field-odd"><p><cite>database_tables</cite></p>
+</dd>
+</dl>
+</div>
+<div class="section" id="uh-ok-but-like-why">
+<h2>Uh, OK. But, Like …Why?<a class="headerlink" href="#uh-ok-but-like-why" title="Permalink to this headline">¶</a></h2>
+<p>Data is amazing! The ability to examine, aggregate, and transform data can
+give incredible and powerful insights into the large physical collection that
+CHPL maintains for the public.</p>
+<p>Reports, search tools and other really interesting and useful things can be generated from this data</p>
+<p>For Example This:</p>
+<p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-98fefc7/top_circulating_by_subject?subject=dystopias&amp;_hide_sql=1">Top Circulating Titles With Subject Heading ‘dystopias’ in the CHPL Current Collection</a></p>
+<hr class="docutils" />
+<ul class="simple">
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="database_tables.html">Database Tables, Columns, and Definitions</a><ul>
@@ -270,20 +266,38 @@ To find the number of total titles that have at least a single item associated w
 <li class="toctree-l2"><a class="reference internal" href="database_tables.html#phrase-entry-table"><strong>phrase_entry</strong> Table</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="static_queries.html">Static SQL Queries &amp; Reports</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#bib-records-deleted-within-the-last-week">Bib Records Deleted Within the Last Week</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#item-records-deleted-within-the-last-week">Item Records Deleted Within the Last Week</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#collection-value">Collection Value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#available-items-circulation-information-by-location-at-branch">Available Items &amp; Circulation Information By Location at Branch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#lucky-day-leased-books-and-leased-dvds-analysis">Lucky Day Leased Books and Leased DVDs Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#new-books-list">New Books List</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#items-with-0-circulation-by-branch-name-including-pagination">Items with 0 Circulation by branch_name (including pagination)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#item-data-consistency-report-excluded-titles">Item Data Consistency Report – Excluded Titles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#titles-with-100-items-active-checked-out-by-popularity-total-items-checkouts">Titles with 100% items (active) checked out (by popularity–total items checkouts)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries.html#percent-total-items-checked-out-by-location-at-branch-given-branch-code">Percent Total Items Checked Out by Location at Branch (given branch code)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="static_queries_holds.html">Static SQL Queries &amp; Reports: Holds</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="static_queries_holds.html#defining-active-holds">Defining “active holds”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries_holds.html#defining-active-items">Defining “active items”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="static_queries_holds.html#active-holds-by-title-sorted-by-count-active-holds">“active holds” by title (sorted by count “active holds”)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous Links &amp; Information</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="misc.html#useful-links">Useful Links</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples and Uses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#bib-and-item-tables"><code class="docutils literal notranslate"><span class="pre">bib</span></code> and <code class="docutils literal notranslate"><span class="pre">item</span></code> Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#full-text-search">Full Text Search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#limit-to-active-items">Limit to “active” Items</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#aggregate-counts">Aggregate Counts</a></li>
+</ul>
+</li>
 </ul>
 </div>
-</div>
-<div class="section" id="uh-ok-but-like-why">
-<h2>Uh, OK. But, Like …Why?<a class="headerlink" href="#uh-ok-but-like-why" title="Permalink to this headline">¶</a></h2>
-<p>Data is amazing! The ability to examine, aggregate, and transform data can
-give incredible and powerful insights into the large physical collection that
-CHPL maintains for the public.</p>
-<p>Reports, search tools and other really interesting and useful things can be generated from this data</p>
-<p>For Example This:</p>
-<p><a class="reference external" href="https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-98fefc7/top_circulating_by_subject?subject=dystopias&amp;_hide_sql=1">Top Circulating Titles With Subject Heading ‘dystopias’ in the CHPL Current Collection</a></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
 </div>
 </div>
 
@@ -293,7 +307,7 @@ CHPL maintains for the public.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="static_queries.html" class="btn btn-neutral float-right" title="Static SQL Queries &amp; Reports" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="database_tables.html" class="btn btn-neutral float-right" title="Database Tables, Columns, and Definitions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

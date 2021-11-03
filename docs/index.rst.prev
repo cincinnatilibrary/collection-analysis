@@ -51,15 +51,19 @@ To find the number of total titles that have at least a single item associated w
 
 Below are static SQL queries for reports and analysis
 
-:doc:`static_queries`
+.. toctree::
+   :maxdepth: 2
 
-:doc:`static_queries_holds`
+   static_queries
+   static_queries_holds.rst
 
 More examples, general use-cases and miscellaneous information can be found below.
 
-:doc:`examples`
-
-:doc:`misc`   
+.. toctree::
+   :maxdepth: 1
+   
+   examples
+   misc
 
 What is Included in the Data Set?
 ---------------------------------
@@ -79,7 +83,10 @@ There are two primary tables in each data snapshot (additional tables are also i
 
 More detail about what is included in each of the database snapshots can be found below.
 
-:doc: `database_tables`
+.. toctree::
+   :maxdepth: 3
+   
+   database_tables
 
 Uh, OK. But, Like ...Why?
 -------------------------
@@ -94,15 +101,5 @@ For Example This:
 
 `Top Circulating Titles With Subject Heading 'dystopias' in the CHPL Current Collection <https://ilsweb.cincinnatilibrary.org/collection-analysis/current_collection-98fefc7/top_circulating_by_subject?subject=dystopias&_hide_sql=1>`_
 
-----
-
 * :ref:`search`
 
-.. toctree::
-   :maxdepth: 2
-
-   database_tables
-   static_queries
-   static_queries_holds
-   misc
-   examples
