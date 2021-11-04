@@ -94,19 +94,19 @@ Defining "active items"
      -- * if the item has a due date, then it must be less than 60 days overdue:
      --   coalesce( (julianday(date('now')) - julianday(item.due_date) > 60.0 ), FALSE)
      select
+       item.bib_record_num,
        item.item_record_num,
        v.volume_record_num,
        v.volume_statement,
-       v.items_display_order,
-       item.bib_record_num
+       v.items_display_order
      from
-       item -- we need to consider volume information for volume-level holds
-       left outer join volume_record_item_record_link as v on v.item_record_num = item.item_record_num
+       item
+       left outer join volume_record_item_record_link as v on v.item_record_num = item.item_record_num -- we need to consider volume information for volume-level holds
        join record_metadata as r on (
          r.record_type_code = 'b'
          and r.record_num = item.bib_record_num
          and r.campus_code = ''
-       )
+       ) -- considers only items belonging to us (no virtual items)
      where
        -- * item status is one of the following codes:
        --   ('-', '!', 'b', 'p', '(', '@', ')', '_', '=', '+', 't')

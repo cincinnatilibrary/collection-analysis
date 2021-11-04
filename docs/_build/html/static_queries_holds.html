@@ -271,19 +271,19 @@
   <span class="c1">-- * if the item has a due date, then it must be less than 60 days overdue:</span>
   <span class="c1">--   coalesce( (julianday(date(&#39;now&#39;)) - julianday(item.due_date) &gt; 60.0 ), FALSE)</span>
   <span class="k">select</span>
+    <span class="n">item</span><span class="p">.</span><span class="n">bib_record_num</span><span class="p">,</span>
     <span class="n">item</span><span class="p">.</span><span class="n">item_record_num</span><span class="p">,</span>
     <span class="n">v</span><span class="p">.</span><span class="n">volume_record_num</span><span class="p">,</span>
     <span class="n">v</span><span class="p">.</span><span class="n">volume_statement</span><span class="p">,</span>
-    <span class="n">v</span><span class="p">.</span><span class="n">items_display_order</span><span class="p">,</span>
-    <span class="n">item</span><span class="p">.</span><span class="n">bib_record_num</span>
+    <span class="n">v</span><span class="p">.</span><span class="n">items_display_order</span>
   <span class="k">from</span>
-    <span class="n">item</span> <span class="c1">-- we need to consider volume information for volume-level holds</span>
-    <span class="k">left</span> <span class="k">outer</span> <span class="k">join</span> <span class="n">volume_record_item_record_link</span> <span class="k">as</span> <span class="n">v</span> <span class="k">on</span> <span class="n">v</span><span class="p">.</span><span class="n">item_record_num</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">item_record_num</span>
+    <span class="n">item</span>
+    <span class="k">left</span> <span class="k">outer</span> <span class="k">join</span> <span class="n">volume_record_item_record_link</span> <span class="k">as</span> <span class="n">v</span> <span class="k">on</span> <span class="n">v</span><span class="p">.</span><span class="n">item_record_num</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">item_record_num</span> <span class="c1">-- we need to consider volume information for volume-level holds</span>
     <span class="k">join</span> <span class="n">record_metadata</span> <span class="k">as</span> <span class="n">r</span> <span class="k">on</span> <span class="p">(</span>
       <span class="n">r</span><span class="p">.</span><span class="n">record_type_code</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span>
       <span class="k">and</span> <span class="n">r</span><span class="p">.</span><span class="n">record_num</span> <span class="o">=</span> <span class="n">item</span><span class="p">.</span><span class="n">bib_record_num</span>
       <span class="k">and</span> <span class="n">r</span><span class="p">.</span><span class="n">campus_code</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="p">)</span>
+    <span class="p">)</span> <span class="c1">-- considers only items belonging to us (no virtual items)</span>
   <span class="k">where</span>
     <span class="c1">-- * item status is one of the following codes:</span>
     <span class="c1">--   (&#39;-&#39;, &#39;!&#39;, &#39;b&#39;, &#39;p&#39;, &#39;(&#39;, &#39;@&#39;, &#39;)&#39;, &#39;_&#39;, &#39;=&#39;, &#39;+&#39;, &#39;t&#39;)</span>
