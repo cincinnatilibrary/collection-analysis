@@ -50,21 +50,21 @@ def set_access_headers(client_key, client_secret, base_url):
   return headers
 
 
-  def check_credentials(client_key, client_secret, base_url):
-    """
-    try to authorize the client_key + client_secret and return some data
-    """
+def check_credentials(client_key, client_secret, base_url):
+  """
+  try to authorize the client_key + client_secret and return some data
+  """
 
-    try:
-      headers = set_access_headers(client_key, client_secret, base_url)
-      r = requests.get(base_url + 'info/token', headers=headers, verify=True)
-    except:
-      return(
-        # TODO 
-        # {'error': r.NameError}
-        -1
-      )
+  try:
+    headers = set_access_headers(client_key, client_secret, base_url)
+    r = requests.get(base_url + 'info/token', headers=headers, verify=True)
+  except:
+    return(
+      # TODO 
+      # {'error': r.NameError}
+      -1
+    )
 
-    return(r.json())
+  return(r.json())
 
-  #print('access token expires in: {} seconds'.format(r.json()['expiresIn']))
+#print('access token expires in: {} seconds'.format(r.json()['expiresIn']))
