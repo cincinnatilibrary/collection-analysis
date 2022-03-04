@@ -1,0 +1,10 @@
+{
+    "facet_time_limit_ms": 60000,
+    "sql_time_limit_ms" : 60000,
+    "base_url": "/",
+    "num_sql_threads": 10,
+    "default_facet_size": 100,
+    "max_returned_rows": 2000,
+    "default_page_size": 200,
+    "hash_urls": true
+}

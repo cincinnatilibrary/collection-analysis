@@ -1,0 +1,14 @@
+[Unit]
+Description=Datasette Branch
+After=network.target
+
+[Service]
+Type=simple
+User=ray
+Environment=DATASETTE_SECRET=
+WorkingDirectory=/home/ray/branch/
+ExecStart=/home/ray/branch/start_datasette.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

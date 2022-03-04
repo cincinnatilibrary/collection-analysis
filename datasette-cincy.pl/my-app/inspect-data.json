@@ -1,0 +1,88 @@
+{
+  "chpl": {
+    "hash": "0e8767eaf32226296b9f891b9bb3298cb5f83349c48ce41ca7b9d60675e8c7ef",
+    "size": 28672,
+    "file": "chpl.db",
+    "tables": {
+      "branch_locations": {
+        "count": 44
+      }
+    }
+  },
+  "current_collection": {
+    "hash": "5863793ebff02b5e43313304a42c371839dc49a64d0f409aca83844f801688d9",
+    "size": 5146750976,
+    "file": "current_collection.db",
+    "tables": {
+      "record_metadata": {
+        "count": 13824152
+      },
+      "bib": {
+        "count": 2106513
+      },
+      "item": {
+        "count": 5707906
+      },
+      "bib_record": {
+        "count": 2106513
+      },
+      "volume_record": {
+        "count": 356510
+      },
+      "item_message": {
+        "count": 42792
+      },
+      "language_property": {
+        "count": 485
+      },
+      "bib_record_item_record_link": {
+        "count": 6224979
+      },
+      "volume_record_item_record_link": {
+        "count": 675800
+      },
+      "branch_name": {
+        "count": 52
+      },
+      "branch": {
+        "count": 52
+      },
+      "country_property_myuser": {
+        "count": 333
+      },
+      "item_status_property": {
+        "count": 31
+      },
+      "itype_property": {
+        "count": 117
+      },
+      "bib_level_property": {
+        "count": 8
+      },
+      "material_property": {
+        "count": 28
+      },
+      "location": {
+        "count": 3009
+      },
+      "location_name": {
+        "count": 3009
+      },
+      "hold": {
+        "count": 156371
+      },
+      "circ_agg": {
+        "count": 22746
+      },
+      "circ_leased_items": {
+        "count": 50627
+      },
+      "branch_locations": {
+        "count": 44
+      },
+      "sqlite_stat1": {
+        "count": 54
+      }
+    }
+  }
+}
