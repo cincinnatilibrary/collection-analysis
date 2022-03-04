@@ -9,7 +9,6 @@ output/
 !requirements.txt
 !UFL.txt
 *.xz
-*.png
 !docs/*.png
 *.csv
 *.zip
