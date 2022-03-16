@@ -1,8 +1,10 @@
 venv/
 env/
+venv*/
 testing/
 output/
 .vscode/
+config.json
 *.ini
 *.db
 *.txt
@@ -12,3 +14,4 @@ output/
 !docs/*.png
 *.csv
 *.zip
+.ipynb_checkpoints

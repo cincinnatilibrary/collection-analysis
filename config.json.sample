@@ -1,0 +1,5 @@
+{
+    "pg_username": "USERNAME",
+    "pg_password": "PASSWORD",
+    "output_dir":  "/home/plchuser/output/collection-analysis-datasette/"
+}
