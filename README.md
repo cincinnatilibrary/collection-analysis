@@ -21,8 +21,12 @@ This script will connect to the Sierra database and use the SQL feature to colle
 For the purpose of hosting an instance of Datasette, we can build an SQLite 
 database from the Jupyter Notebook : [collection-analysis.cincy.pl_gen_db.ipynb](collection-analysis.cincy.pl_gen_db.ipynb)
 
-Run the Notebook using Papermill like this:
+Run the notebook in the terminal like this:
 
 ```bash
-papermill collection-analysis.cincy.pl_gen_db.ipynb -p gen_collection 'daily' output.ipynb
+jupyter nbconvert \
+--execute --to notebook \
+--output output \
+collection-analysis.cincy.pl_gen_db.ipynb
 ```
+~
