@@ -1,19 +1,11 @@
 
-# Purpose
-
-This application will export data from the Sierra ILS, and cache it for purpose of feeding collection analysis tools
-
-[https://collection-analysis.cincy.pl/](https://collection-analysis.cincy.pl/)
-
-## Overview
+# Purpose / Overview
 
 This script will connect to the Sierra database and use the SQL feature to collect required information from the database views for use with the CollectionHQ service.
 
-## Documentation
+This application will also export data from the Sierra ILS, and cache it for purpose of feeding collection analysis tools
 
-### collection analysis tool
-
-[https://ilsweb.cincinnatilibrary.org/collection-analysis-docs/](https://ilsweb.cincinnatilibrary.org/collection-analysis-docs/)
+[https://collection-analysis.cincy.pl/](https://collection-analysis.cincy.pl/)
 
 ## Running the server
 
