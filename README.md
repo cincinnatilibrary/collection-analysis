@@ -3,7 +3,7 @@
 
 This application will export data from the Sierra ILS, and cache it for purpose of feeding collection analysis tools
 
-[https://ilsweb.cincinnatilibrary.org/collection-analysis/](https://ilsweb.cincinnatilibrary.org/collection-analysis/)
+[https://collection-analysis.cincy.pl/](https://collection-analysis.cincy.pl/)
 
 ## Overview
 
@@ -15,6 +15,11 @@ This script will connect to the Sierra database and use the SQL feature to colle
 
 [https://ilsweb.cincinnatilibrary.org/collection-analysis-docs/](https://ilsweb.cincinnatilibrary.org/collection-analysis-docs/)
 
+## Running the server
+
+Files and configurations for running the server can be found here:
+
+[datasette-cincy.pl](datasette-cincy.pl)
 
 ## Building SQLite DB / Export Process 
 
@@ -29,4 +34,3 @@ jupyter nbconvert \
 --output output \
 collection-analysis.cincy.pl_gen_db.ipynb
 ```
-~
