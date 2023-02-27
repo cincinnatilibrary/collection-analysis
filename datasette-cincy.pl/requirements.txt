@@ -2,7 +2,7 @@ aiofiles==0.8.0
 anyio==3.5.0
 asgi-csrf==0.9
 asgiref==3.4.1
-certifi==2021.10.8
+certifi==2022.12.7
 charset-normalizer==2.0.11
 click==8.0.3
 click-default-group==1.2.2
