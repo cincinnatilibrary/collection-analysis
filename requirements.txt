@@ -84,7 +84,7 @@ terminado==0.13.3
 testpath==0.6.0
 textwrap3==0.9.2
 tomli==2.0.1
-tornado==6.1
+tornado==6.3.2
 tqdm==4.63.0
 traitlets==5.1.1
 typed-ast==1.5.2
