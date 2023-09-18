@@ -81,68 +81,63 @@ i.renewal_total,
 		'[0-9]{9,10}[x]{0,1}|[0-9]{12,13}[x]{0,1}', -- the regex to match on (10 or 13 digits, with the possibility of the 'X' character in the check-digit spot)
 		'i' -- regex flags; ignore case
 	)
-
 	FROM
 	sierra_view.varfield as v
-
 	WHERE
 	v.record_id = br.id
 	AND v.marc_tag || v.varfield_type_code = '020i'
-
 	ORDER BY
 	v.occ_num
-
 	LIMIT 1
 )[1]::varchar(30) as isbn,
 (
 	SELECT
 	t.name
-
 	FROM
 	temp_map_item_type AS t	
-
 	WHERE
 	t.code = i.itype_code_num
-
 	LIMIT 1
 ) as item_format,
 i.item_status_code,
 i.price::numeric(30,2)::money AS price,
-p.call_number_norm AS item_callnumber
- 
+p.call_number_norm AS item_callnumber,
+(
+	select
+		v.field_content 
+	from
+		sierra_view.volume_record_item_record_link as vrirl
+		join sierra_view.varfield as v on ( 			
+			v.record_id = vrirl.volume_record_id
+			and v.varfield_type_code = 'v'
+		)
+	where 
+		vrirl.item_record_id = r.id
+	order by v.occ_num 
+	limit 1
+) as volume_record_statement 
 FROM
-sierra_view.record_metadata as r
-
+	sierra_view.record_metadata as r
 JOIN
-sierra_view.item_record_property as p
-ON
-  p.item_record_id = r.id
-
+	sierra_view.item_record_property as p ON
+		p.item_record_id = r.id
 JOIN
-sierra_view.item_record as i
-ON
-  i.record_id = r.id
-
+	sierra_view.item_record as i ON
+		i.record_id = r.id
 -- item may not be checked out, so we want to left join so we don't exclude items that are not checked out
 LEFT OUTER JOIN
-sierra_view.checkout as c
-ON
-  c.item_record_id = r.id
-
+	sierra_view.checkout as c on
+		c.item_record_id = r.id
 JOIN
-sierra_view.bib_record_item_record_link as l
-ON
-  l.item_record_id = r.id
-
+	sierra_view.bib_record_item_record_link as l on
+		l.item_record_id = r.id
 JOIN
-sierra_view.record_metadata as br
-ON
-  br.id = l.bib_record_id
-
+	sierra_view.record_metadata as br on
+		br.id = l.bib_record_id
 WHERE
-r.record_type_code = 'i'
-AND r.campus_code = ''
-AND r.deletion_date_gmt is NULL
+	r.record_type_code = 'i'
+	AND r.campus_code = ''
+	AND r.deletion_date_gmt is NULL
 
 -- TESTING -- only fetch a small sample
 -- LIMIT 20000
