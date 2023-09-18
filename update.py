@@ -65,7 +65,7 @@ class App:
         self.open_db_connections()
 
         # create the table if it doesn't exist
-        self.create_local_table()
+        # self.create_local_table()
 
         # create the temp table, and fill it with any local IDs (if there are any)
         self.create_remote_temp_tables()
@@ -121,7 +121,7 @@ class App:
 
     # ~ the destructor
     def __del__(self):
-        self.sqlite_conn.commit()
+        # self.sqlite_conn.commit()
         self.close_connections()
         print("done.")
 
@@ -134,10 +134,10 @@ class App:
             print("unable to connect to sierra database: %s" % e)
 
         # ~ connect to the local sqlite database
-        try:
-            self.sqlite_conn = sqlite3.connect(self.local_db_connection_string)
-        except sqlite3.Error as e:
-            print("unable to connect to local database: %s" % e)
+        # try:
+        #     self.sqlite_conn = sqlite3.connect(self.local_db_connection_string)
+        # except sqlite3.Error as e:
+        #     print("unable to connect to local database: %s" % e)
 
     def close_connections(self):
         print("closing database connections...")
@@ -147,30 +147,31 @@ class App:
                 self.pgsql_conn.close()
                 self.pgsql_conn = None
 
-        if self.sqlite_conn:
-            if hasattr(self.sqlite_conn, "close"):
-                print("closing sqlite_conn")
-                self.sqlite_conn.close()
-                self.sqlite_conn = None
+        # if self.sqlite_conn:
+        #     if hasattr(self.sqlite_conn, "close"):
+        #         print("closing sqlite_conn")
+        #         self.sqlite_conn.close()
+        #         self.sqlite_conn = None
 
     def create_local_table(self):
-        cursor = self.sqlite_conn.cursor()
+        pass
+        #cursor = self.sqlite_conn.cursor()
 
         # create the bib table if it doesn't exist
-        sql = """
-		CREATE TABLE IF NOT EXISTS "bib" ( `bib_record_num` INTEGER, `bib_record_id` INTEGER, `control_numbers` TEXT, `creation_date` TEXT, `record_last_updated` TEXT, `isbn` TEXT, `best_author` TEXT, `best_author_norm` TEXT, `best_title` TEXT, `best_title_norm` TEXT, `publisher` TEXT, `publish_year` INTEGER, `bib_level_callnumber` TEXT, `indexed_subjects` TEXT, `is_deleted` INTEGER DEFAULT 0, PRIMARY KEY(`bib_record_id`) )
-		"""
-        cursor.execute(sql)
+        # sql = """
+		# CREATE TABLE IF NOT EXISTS "bib" ( `bib_record_num` INTEGER, `bib_record_id` INTEGER, `control_numbers` TEXT, `creation_date` TEXT, `record_last_updated` TEXT, `isbn` TEXT, `best_author` TEXT, `best_author_norm` TEXT, `best_title` TEXT, `best_title_norm` TEXT, `publisher` TEXT, `publish_year` INTEGER, `bib_level_callnumber` TEXT, `indexed_subjects` TEXT, `is_deleted` INTEGER DEFAULT 0, PRIMARY KEY(`bib_record_id`) )
+		# """
+        # cursor.execute(sql)
 
         # create the item table if it doesn't exist
-        sql = """
-		CREATE TABLE IF NOT EXISTS `item` ( `item_record_id` INTEGER, `item_record_num` INTEGER, `bib_record_id` INTEGER, `bib_record_num` INTEGER, `creation_date` TEXT, `record_last_updated` TEXT, `barcode` TEXT, `agency_code_num` INTEGER, `location_code` TEXT, `checkout_statistic_group_code_num` INTEGER, `checkin_statistics_group_code_num` INTEGER, `checkout_date` TEXT, `due_date` TEXT, `patron_branch_code` TEXT, `last_checkout_date` TEXT, `last_checkin_date` TEXT, `checkout_total` INTEGER, `renewal_total` INTEGER, `isbn` TEXT, `item_format` TEXT, `item_status_code` TEXT, `price` TEXT, `item_callnumber` TEXT, `is_deleted` INTEGER DEFAULT 0, PRIMARY KEY(`item_record_id`) )
-		"""
-        cursor.execute(sql)
+        # sql = """\
+# CREATE TABLE IF NOT EXISTS `item` ( `item_record_id` INTEGER, `item_record_num` INTEGER, `bib_record_id` INTEGER, `bib_record_num` INTEGER, `creation_date` TEXT, `record_last_updated` TEXT, `barcode` TEXT, `agency_code_num` INTEGER, `location_code` TEXT, `checkout_statistic_group_code_num` INTEGER, `checkin_statistics_group_code_num` INTEGER, `checkout_date` TEXT, `due_date` TEXT, `patron_branch_code` TEXT, `last_checkout_date` TEXT, `last_checkin_date` TEXT, `checkout_total` INTEGER, `renewal_total` INTEGER, `isbn` TEXT, `item_format` TEXT, `item_status_code` TEXT, `price` TEXT, `item_callnumber` TEXT, volume_record_statement TEXT, `is_deleted` INTEGER DEFAULT 0, PRIMARY KEY(`item_record_id`) )
+		# """
+        # cursor.execute(sql)
 
-        self.sqlite_conn.commit()
-        cursor.close()
-        cursor = None
+        # self.sqlite_conn.commit()
+        # cursor.close()
+        # cursor = None
 
     def create_remote_temp_tables(self):
         # open the sqlfile
@@ -235,7 +236,7 @@ class App:
 
     def fill_local_db(self):
         # create the cursor
-        cursor = self.sqlite_conn.cursor()
+        # cursor = self.sqlite_conn.cursor()
 
         # insert the bib data
         bib_csv_file = open(self.csv_bib_file_name, "w")
@@ -302,7 +303,7 @@ class App:
                 row.indexed_subjects,
             )
             # do the insert
-            cursor.execute(sql_bib_insert, values)
+            # cursor.execute(sql_bib_insert, values)
             # debug
             # pdb.set_trace()
 
@@ -345,13 +346,13 @@ class App:
 
             # commit values to the local database every self.itersize times through
             if row_counter % self.itersize == 0:
-                self.sqlite_conn.commit()
+                # self.sqlite_conn.commit()
                 print(".", end="")
                 # self.sqlite_conn.commit()
                 # debug
                 # pdb.set_trace()
                 # print(row)
-        self.sqlite_conn.commit()
+        # self.sqlite_conn.commit()
         bib_csv_file.close()
         print("\ndone with bib export")
         # /insert the bib data
@@ -388,7 +389,8 @@ class App:
 			item_format, --20
 			item_status_code, --21
 			price, --22
-			item_callnumber --23
+			item_callnumber, --23
+			volume_record_statement --24			
 		)
 
 		VALUES
@@ -415,7 +417,8 @@ class App:
 			?, --20
 			?, --21
 			?, --22
-			? --23
+			?, --23
+			? -- 24
 		);
 		"""
 
@@ -448,6 +451,7 @@ class App:
                 "item_status_code",
                 "price",
                 "item_callnumber",
+                "volume_record_statement",
             )
         )
 
@@ -478,6 +482,7 @@ class App:
                     row.item_status_code,
                     row.price,
                     row.item_callnumber,
+                    row.volume_record_statement,
                 )
             )
 
@@ -505,21 +510,22 @@ class App:
                 row.item_status_code,
                 row.price,
                 row.item_callnumber,
+                row.volume_record_statement,
             )
             # do the insert
-            cursor.execute(sql_item_insert, values)
+            # cursor.execute(sql_item_insert, values)
             # debug
             # pdb.set_trace()
 
             # commit values to the local database every self.itersize times through
             if row_counter % self.itersize == 0:
-                self.sqlite_conn.commit()
+                # self.sqlite_conn.commit()
                 print(".", end="", flush=True)
                 # self.sqlite_conn.commit()
                 # debug
                 # pdb.set_trace()
                 # print(row)
-        self.sqlite_conn.commit()
+        # self.sqlite_conn.commit()
         item_csv_file.close()
         print("\ndone with item export")
         # /insert the item data
